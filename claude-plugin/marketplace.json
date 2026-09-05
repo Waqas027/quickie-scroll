@@ -1,0 +1,14 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "quickie-scroll",
+  "description": "Cinematic scroll-driven Next.js sites and Flutter/Android apps, from a renderable markdown prompt pack.",
+  "plugins": [
+    {
+      "name": "quickie-scroll",
+      "source": "./",
+      "skills": ["./skills/quickie-scroll"],
+      "description": "Scroll drives a real camera through a photoreal world. Interviews for target, look, camera architecture, chapters and the editorial page after the film; generates one start image and chains every later scene off the previous clip's last frame; writes seven-block image-to-video prompts that render in any tool; scaffolds a Next.js project with the scrub engine and Lenis smooth scroll, or — after probing for a Flutter/Android SDK — a dependency-free 9:16 mobile app.",
+      "category": "design"
+    }
+  ]
+}

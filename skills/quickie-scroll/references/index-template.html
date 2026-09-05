@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>BRAND — TAGLINE</title>
+  <meta name="description" content="Scroll to travel from FIRST SCENE to LAST SCENE." />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%230A1220%27/%3E%3Cpath d=%27M6 20h20M16 20V9%27 stroke=%27%23E9C77E%27 stroke-width=%272.4%27 fill=%27none%27/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!-- Type pairing comes from the look (references/looks.md). -->
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    /* The look's palette. These tokens are unlayered, so they beat the engine's
+       defaults regardless of load order. --sw-bg must match the film's dominant
+       darkness or the posters flash against it on load. */
+    :root, .sw-root {
+      --sw-bg: #0B0C0E;
+      --sw-ink: #F2EAD9;
+      --sw-ink-soft: #B9AE9C;
+      --sw-accent: #E9C77E;
+      --sw-font-display: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+      --sw-font-body: 'Inter', -apple-system, 'Segoe UI', sans-serif;
+    }
+  </style>
+</head>
+<body>
+  <div id="top"></div>
+  <div id="world"></div>
+
+  <script src="quickie-scroll.js"></script>
+  <script>
+    mountQuickieScroll(document.getElementById('world'), {
+      brand: { name: 'BRAND', href: '#top' },
+      cta: { label: 'CTA', href: '#finale' },
+      hint: 'scroll to begin',
+      diveScroll: 1.4,
+      crossfade: 0.08,          // architecture A: legs chain frame-to-frame — small dissolve only
+      connectors: [],           // architecture B only; length === sections.length - 1
+
+      // Corner instrumentation. Wording comes from the look.
+      hud: {
+        system: '01 — CHAPTER NAME',
+        verb: 'scroll to descend',
+        frames: true,
+        brackets: false,        // true for technical-white; it's half that look's identity
+      },
+
+      sections: [
+        {
+          id: 'one', label: 'Chapter One',
+          still: 'assets/images/01-one.webp',
+          clip:  'assets/videos/01-one.mp4',
+          clipMobile: 'assets/videos/01-one-m.mp4',    // native 9:16, mobile opt-in only
+          stillMobile: 'assets/images/01-one-m.webp',
+          accent: '#E9C77E',
+          align: 'left',        // alternate this down the list — see prompts.md
+          scroll: 1.5, linger: 0.35,
+          eyebrow: '01 — CHAPTER NAME',
+          title: 'The hero line.',
+          body: 'One plain-spoken sentence, from the visitor’s side.',
+          tags: ['Proof', 'Proof'],
+        },
+        // …middle chapters — alternate align: 'right', 'center', 'left'…
+        // Chapter 1's `still` is the one generated image. Every later chapter's `still` is
+        // `first-NN.webp`, extracted from its own clip — no extra image generation.
+        {
+          id: 'finale', label: 'The Product',
+          still: 'assets/frames/first-05-finale.webp',
+          clip:  'assets/videos/05-finale.mp4',
+          accent: '#E9C77E',
+          align: 'center',
+          scroll: 1.8, linger: 0.45,
+          eyebrow: 'And it all becomes',
+          title: 'The payoff line.',
+          body: 'The closing sentence.',
+          cta: { primary: { label: 'Primary', href: '#' },
+                 secondary: { label: 'Secondary', href: '#' } },
+        },
+      ],
+
+      // The page after the film. A cinematic with no acts is a hero, not a product site.
+      acts: [
+        { kind: 'statement', tone: 'light',
+          eyebrow: 'A LABEL',
+          title: 'The one idea the film was actually about.',
+          body: 'Two lines that land it in plain language.' },
+
+        { kind: 'cards', tone: 'light',
+          cards: [
+            { title: 'First proof point', body: 'One sentence.', tone: 'dark' },
+            { title: 'Second proof point', body: 'One sentence.', tone: 'light' },
+          ] },
+
+        { kind: 'cta', tone: 'tint',
+          title: 'The ask.',
+          body: 'One line of reassurance.',
+          placeholder: 'you@email.com',
+          action: { label: 'Begin' } },
+
+        { kind: 'footer', tone: 'dark',
+          brand: 'BRAND',
+          note: '© 2026 BRAND',
+          links: [{ label: 'Journey', href: '#top' }, { label: 'Contact', href: '#' }] },
+      ],
+    });
+  </script>
+</body>
+</html>

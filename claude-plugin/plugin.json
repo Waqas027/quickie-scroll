@@ -1,0 +1,22 @@
+{
+  "name": "quickie-scroll",
+  "description": "Build cinematic scroll-driven product experiences — Next.js websites and Flutter or native-Android apps — where scroll drives a real camera through a photoreal world. Generates exactly one start image and conditions every later scene on the previous clip's actual last frame, writing each clip prompt in a fixed seven-block form built for image-to-video models rather than cinematic prose. Locks a supplied product as the visual anchor, sorts design references into style inspiration, and ships a seven-look art-direction library tuned for realism, a numbered markdown prompt pack renderable in any tool, a scrub engine with cinematic HUD chrome plus a React wrapper, an editorial page after the film (statement, cards, reviews, testimonials, CTA, footer or custom), and dependency-free Flutter and Jetpack Compose scaffolds for the 9:16 app target. For app requests it probes for a Flutter or Android SDK first and offers the website if neither is installed. Use for a scroll cinematic, an Apple-style scroll-through product page, an immersive brand site, or a scroll-driven mobile app.",
+  "version": "1.2.0",
+  "license": "MIT",
+  "keywords": [
+    "scroll",
+    "cinematic",
+    "nextjs",
+    "react",
+    "landing-page",
+    "product-page",
+    "video-scrub",
+    "image-to-video",
+    "prompt-engineering",
+    "flutter",
+    "android",
+    "jetpack-compose",
+    "photoreal",
+    "prompt-pack"
+  ]
+}
