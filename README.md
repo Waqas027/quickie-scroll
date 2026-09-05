@@ -12,12 +12,20 @@ pages, made repeatable.
 ## Install
 
 ```
-/plugin marketplace add <this repo>
-/plugin install quickie-scroll
+/plugin marketplace add Waqas027/quickie-scroll
+/plugin install quickie-scroll@quickie-scroll
 ```
 
 Then just ask: *"build me a scroll-driven site for a mountain water bottle"* or *"create a
 scroll-driven perfume brand Flutter app"*.
+
+Or skip the plugin system — clone it and drop the skill in place:
+
+```bash
+git clone https://github.com/Waqas027/quickie-scroll.git
+cp -r quickie-scroll/skills/quickie-scroll ~/.claude/skills/   # available everywhere
+# or into .claude/skills/ inside a project, to ship it with that repo
+```
 
 ## What you get
 
