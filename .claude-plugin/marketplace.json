@@ -2,6 +2,10 @@
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "quickie-scroll",
   "description": "Cinematic scroll-driven Next.js sites and Flutter/Android apps, from a renderable markdown prompt pack.",
+  "owner": {
+    "name": "Waqas027",
+    "url": "https://github.com/Waqas027"
+  },
   "plugins": [
     {
       "name": "quickie-scroll",
