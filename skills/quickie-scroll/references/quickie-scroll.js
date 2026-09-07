@@ -288,8 +288,15 @@ function mountQuickieScroll(container, config) {
       if (y > s.start - 1.6 * vh && y < s.end + 1.6 * vh) loadClip(s);
       const local = clamp((y - s.start) / (s.end - s.start), 0, 1);
       s.target = s.linger ? lingerEase(local, s.linger) : local;
+      // The last segment never fades out past its end: the film holds on its
+      // final frame while the acts scroll up over it. Without the hold the fixed
+      // stage empties one crossfade past the last seam, while the track's
+      // trailing +1vh (and any acts shorter than a viewport) still has to be
+      // scrolled through — which reads as a blank band of bare .sw-sky between
+      // the film and the first act.
       let outside = 0;
-      if (y < s.start) outside = s.start - y; else if (y > s.end) outside = y - s.end;
+      if (y < s.start) outside = s.start - y;
+      else if (y > s.end && i < NSEG - 1) outside = y - s.end;
       const op = smooth(1 - outside / fade);
       s.el.style.opacity = op; s.visible = op > 0.001;
       s.el.style.zIndex = (i === ci) ? '120' : String(100 + Math.round(op * 10));
