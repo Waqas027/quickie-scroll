@@ -40,7 +40,7 @@ export type QSLink = { label: string; href?: string };
 
 /**
  * The sixteen footer variants. The slug picks the layout AND the motion recipe —
- * see references/footer-variants.md for what each looks like and when to use it.
+ * see footer/variants.md for what each looks like and when to use it.
  */
 export type QSFooterVariant =
   | 'minimal' | 'luxury' | 'type' | 'editorial' | 'split' | 'cta'

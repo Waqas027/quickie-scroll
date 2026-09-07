@@ -1,5 +1,11 @@
 # The web target — Next.js (default) or React + Vite
 
+*SKILL Step 8, web target: the scaffold, Lenis smooth scroll, and the two things that break the engine.*
+
+**Read with:** [`platforms/web/engine-config.md`](engine-config.md) · [`engine/quickie-scroll.js`](../../engine/quickie-scroll.js) · [`core/rules.md`](../../core/rules.md) §9
+
+---
+
 The web build is a **Next.js App Router project** by default, not a single HTML file. The
 scrub engine is unchanged — it is the same vanilla file the static build uses — but the
 project around it gives you a real animation environment: Lenis smooth scroll, Framer
@@ -26,9 +32,9 @@ meridian/
     page.tsx                the config — this is the build's content
     SmoothScroll.tsx        Lenis provider (client)
   components/
-    QuickieScroll.tsx       the wrapper — copy from references/web/
-    quickie-scroll.js       the engine — copy from references/
-    quickie-scroll.d.ts     its types — copy from references/web/
+    QuickieScroll.tsx       the wrapper — copy from platforms/web/
+    quickie-scroll.js       the engine — copy from engine/
+    quickie-scroll.d.ts     its types — copy from platforms/web/
   public/
     assets/images/…         posters — 01 is the generated still; 02+ are each clip's
                             extracted first frame (assets/frames/first-NN.png)
@@ -143,7 +149,7 @@ const config: QSConfig = {
     { kind: 'statement', tone: 'light', eyebrow: 'WHAT WE ACTUALLY SELL',
       title: 'The distance was never the point.' },
     { kind: 'cta', tone: 'tint', title: 'Tell us where home is.', action: { label: 'Begin' } },
-    // `variant` picks the footer's layout and its motion — see references/footer-variants.md.
+    // `variant` picks the footer's layout and its motion — see footer/variants.md.
     { kind: 'footer', tone: 'dark', variant: 'luxury', brand: 'MERIDIAN',
       tagline: 'Scheduled service, four cities.',
       links: [{ label: 'Routes', href: '#' }, { label: 'Contact', href: '#' }],

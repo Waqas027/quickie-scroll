@@ -2,8 +2,8 @@
 # Toolchain probe for the app target (SKILL Step 0.2).
 #
 # Run this BEFORE promising a mobile app. Prints one of:
-#   FLUTTER   — Flutter SDK usable            -> references/flutter/
-#   ANDROID   — Android SDK, no Flutter       -> references/android/
+#   FLUTTER   — Flutter SDK usable            -> platforms/flutter/
+#   ANDROID   — Android SDK, no Flutter       -> platforms/android/
 #   BOTH      — either is available           -> ask the user which
 #   NONE      — neither                       -> tell the user, offer the website
 #

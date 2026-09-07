@@ -1,13 +1,19 @@
 # The app target — native Android (Jetpack Compose)
 
+*SKILL Step 8, app target — chosen when the Step 0 probe reports ANDROID.*
+
+**Read with:** [`pipeline/encoding.md`](../../pipeline/encoding.md) §6c · [`platforms/flutter/flutter.md`](../flutter/flutter.md) · [`core/bootstrap.md`](../../core/bootstrap.md)
+
+---
+
 Used when the user wants a mobile app and **Flutter is not installed but an Android SDK
-is**. If Flutter is available, prefer it (`flutter/flutter.md`) — one codebase, and the
+is**. If Flutter is available, prefer it (`platforms/flutter/flutter.md`) — one codebase, and the
 scaffold there is smaller. This path exists so "or Android" is a real option rather than a
 claim.
 
 Everything upstream is shared: same interview, same look, same prompt pack, same
 seamless-chain law, same 9:16 portrait assets, same frame-sequence mechanism and the same
-reason for it (`flutter/flutter.md` → *Why frames instead of video_player* — on Android the
+reason for it (`platforms/flutter/flutter.md` → *Why frames instead of video_player* — on Android the
 player is ExoPlayer either way, and a `seekTo` costs a decode from the nearest keyframe).
 
 ## Scaffold
@@ -52,7 +58,7 @@ app/src/main/assets/frames/
 generated `ch01_001` identifiers, recompiled on every re-roll. `AssetManager` reads by
 path, so a re-roll is a file copy.
 
-Produce them from the same 9:16 clips the web build uses (`pipeline.md` §6c, retargeted):
+Produce them from the same 9:16 clips the web build uses (`pipeline/encoding.md` §6c, retargeted):
 
 ```bash
 for f in assets/videos/*-p.mp4; do

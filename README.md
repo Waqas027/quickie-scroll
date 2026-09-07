@@ -133,6 +133,48 @@ not. Drop in Pinterest boards, Dribbble shots or screenshots and they're read as
 — palette, type, composition, grade, motion pace — extracted into the prompts and then set
 aside, never used as a conditioning image.
 
+## Sections chosen for *your* product
+
+After the chapter plan is agreed, the skill reasons about the actual product — its type,
+industry, positioning, references and the scenes the film already covers — and proposes **at
+least five premium animated sections** that would suit that specific project, as a checklist
+you pick from. A perfume gets bottle anatomy, glass macro, an ingredient story; a car gets
+exterior reveal, interior, performance figures; a SaaS product gets feature expansion, an
+interactive explorer and use-cases. Never the same list twice, never a static text block —
+each one is a motion beat (pin-and-advance, clip-path reveal, layer separation, horizontal
+rail, hotspots) placed in the narrative between the film and the editorial acts.
+
+Their imagery comes out of the rendered clips with ffmpeg wherever possible, so the product
+in a detail section is frame-exact against the product in the film.
+
+## How the skill is organised
+
+Feature-based. `SKILL.md` is a small orchestrator — what the skill does, the ten-step
+workflow, and which module to read for each step. Every rule has exactly one home.
+
+```
+skills/quickie-scroll/
+  SKILL.md              orchestrator: workflow spine + module map
+  core/                 rules.md (the laws) · bootstrap.md · quality.md
+  discovery/            interview.md · references.md
+  art-direction/        looks.md · realism.md
+  animation/            scene-planning.md · chain.md · camera.md
+  image/                start-frame.md
+  video/                prompt-pack.md · prompting.md · continuity.md · rendering.md
+  sections/             acts.md · product-sections/ (workflow, library, selection, motion, quality)
+  footer/               workflow.md · variants.md · content-options.md · motion.md
+  platforms/            web/ · flutter/ · android/
+  engine/               quickie-scroll.js
+  pipeline/             scripts.md · encoding.md · backends.md
+  project/              documents.md · readme-template.md · brief-template.md · handoff-loop.md
+  validation/           qa-checklist.md · troubleshooting.md
+  tools/                detect-target.sh · knockout.py
+```
+
+Where do I change…? Footer behaviour → `footer/`. Video prompting → `video/`. Scene
+continuity → `animation/`. Global quality rules → `core/`. Every module opens with a
+one-line purpose and a **Read with** list, so its dependencies are explicit.
+
 ## Relationship to `lets-scroll`
 
 Built on the pipeline and scrub engine from [`lets-scroll`](https://github.com/cywang/lets-scroll),

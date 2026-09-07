@@ -1,5 +1,11 @@
 # The app target — scroll-driven Flutter / Android
 
+*SKILL Step 8, app target — chosen when the Step 0 probe reports FLUTTER or BOTH.*
+
+**Read with:** [`pipeline/encoding.md`](../../pipeline/encoding.md) §6c · [`platforms/android/android.md`](../android/android.md) · [`core/bootstrap.md`](../../core/bootstrap.md)
+
+---
+
 Everything upstream is shared with the web target: the same interview, the same look, the
 same prompt pack, the same seamless-chain law. Only three things change.
 

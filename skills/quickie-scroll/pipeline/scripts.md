@@ -1,8 +1,14 @@
 # Pipeline — copy-paste scripts (bash 3.2 safe)
 
+*Renderer-agnostic ffmpeg and file plumbing: §0 setup, §1 pack, §2 the start still, §3 clips, §4 connectors, §5 validation.*
+
+**Read with:** [`pipeline/encoding.md`](encoding.md) · [`pipeline/backends.md`](backends.md) · [`animation/chain.md`](../animation/chain.md)
+
+---
+
 The project **is** the work folder. There is no `/tmp` scratch dir and no `raw/` staging
 folder: the prompt pack, the videos, the encodes and the extracted frames all live under
-the project in the layout `prompts.md` defines, so a build can be handed off, paused,
+the project in the layout `video/prompt-pack.md` defines, so a build can be handed off, paused,
 resumed or re-rolled weeks later without reconstructing where anything was.
 
 **One video folder.** `assets/videos/` holds the masters exactly as the tool returned
@@ -50,11 +56,11 @@ pf "$PROMPTS/videos/01-threshold.md" | head -3    # must print the prompt, not n
 ## 1. Write the prompt pack
 
 **One image prompt, N video prompts.** Chapters 2…N take their start frame from the
-previous clip's rendered last frame, so they need no still. Templates in `prompts.md`;
-`README.md` and `brief.md` come from `handoff.md`.
+previous clip's rendered last frame, so they need no still. Templates in `image/start-frame.md` and `video/prompting.md`;
+`README.md` and `brief.md` come from `project/documents.md`.
 
 Do not write all N video prompts up front on the manual path — write clip 1, and write
-each later clip from the *real* `last-` frame that came back (`prompts.md` → "Writing clip
+each later clip from the *real* `last-` frame that came back (`video/continuity.md` → "Writing clip
 *n* from clip *n−1*").
 
 ```bash
@@ -179,105 +185,3 @@ seamcheck() { # rendered.mp4  expected-start.png
   ffmpeg -hide_banner -i "/tmp/f0.png" -i "$2" -lavfi psnr -f null - 2>&1 | grep -o "average:[0-9.]*"
 }
 ```
-
-## 6. Encode for scrubbing
-
-Scrubbing sets `currentTime` every frame, so **seek cost** is the only thing that
-matters. Two knobs: a small GOP (cheap seeks) and native resolution (don't downscale a
-1080p render — the softness is already the limiting factor).
-
-```bash
-enc() { ffmpeg -v error -y -i "$1" -an -vf "unsharp=5:5:0.8:5:5:0.0" \
-  -c:v libx264 -preset slow -crf 20 -pix_fmt yuv420p \
-  -g 8 -keyint_min 8 -sc_threshold 0 -movflags +faststart "$2"
-  echo "enc $(basename "$2") $(du -h "$2" | cut -f1)"; }
-
-for n in $NAMES; do enc "$VID/$(f "$n").mp4" "$SERVE/$(f "$n").mp4"; done
-for c in "$VID"/conn-*.mp4; do [ -f "$c" ] && enc "$c" "$SERVE/$(basename "$c")"; done
-```
-
-Do **not** use all-intra: it bloats an 8s clip to ~25 MB for no gain, because the engine
-loads each clip as a Blob (always fully seekable) rather than depending on the host
-serving HTTP byte ranges. `-g 8` is ~8 MB and scrubs identically.
-
-Now the engine config reads `sections[k].clip = '/assets/videos/NN-slug.mp4'` and
-`connectors = ['/assets/videos/conn-01.mp4', …]` (length N−1, in order) — paths into
-`public/`, absolute from the web root. For the standalone `index-template.html` preview,
-point `$SERVE` at a sibling folder and drop the leading slash.
-
-### 6b. Native 9:16 portrait encodes
-
-The mobile version is a **separately-composed portrait chain**, not a crop. Render it
-from portrait stills with portrait prompts (`prompts.md` → Portrait), then:
-
-```bash
-encm() { ffmpeg -v error -y -i "$1" -an -vf "scale=720:-2,unsharp=5:5:0.6:5:5:0.0" \
-  -c:v libx264 -preset slow -crf 23 -pix_fmt yuv420p \
-  -g 4 -keyint_min 4 -sc_threshold 0 -movflags +faststart "$2"; }
-for n in $NAMES; do encm "$VID/$(f "$n")-p.mp4" "$SERVE/$(f "$n")-m.mp4"; done
-```
-
-`-g 4` (twice the keyframes) roughly halves a phone decoder's seek work; 720-wide roughly
-halves the bytes on cellular. Wire as `clipMobile` / `connectorsMobile`, and extract each
-portrait clip's first frame as its `stillMobile` poster so the page never flashes from a
-landscape poster to a portrait video.
-
-If credits or budget can't cover a portrait chain, the fallback is a centre-crop
-(`crop=ih*9/16:ih`) of the landscape master — but that shows phones the middle ~26% of
-every frame, so it must be **called out to the user and approved**, never shipped
-silently as "the mobile version".
-
-## 6c. Flutter frame sequences (app target)
-
-The app scrubs an image sequence, not video — see `flutter/flutter.md` for why.
-
-```bash
-for n in $NAMES; do
-  d="$PROJ/app/assets/frames/$(f "$n")"; mkdir -p "$d"
-  ffmpeg -v error -y -i "$VID/$(f "$n")-p.mp4" -vf "fps=12,scale=720:-2" -q:v 4 "$d/%03d.jpg"
-  echo "$(f "$n") frameCount=$(ls "$d" | wc -l | tr -d ' ')"
-done
-```
-
-The printed `frameCount` goes verbatim into each `Chapter(...)`; a mismatch shows on
-device as a stall at the end of that chapter.
-
-## 7. Known automatic backends
-
-The pipeline above doesn't care what renders the pixels. Three paths are worth knowing:
-
-- **A connected MCP / CLI** (Higgsfield, Monid, Codex `image_gen`, Replicate, fal, …) —
-  detect it at Step 2 of the SKILL, confirm with the user before spending anything, and
-  call it in place of the `--- render here ---` comments. The one hard requirement is
-  **start-frame conditioning** (plus end-frame for architecture B connectors); a
-  reference-only image input cannot hold a seam and disqualifies the model.
-- **Higgsfield + Monid specifically** — the `lets-scroll` skill carries the fully
-  worked CLI flag sets, the model capability table (`seedance_2_0` / `kling3_0` /
-  `seedance_2_0_mini`), the Monid `sfs` upload dance for passing frames by URL, and the
-  per-clip cost table. If those tools are the chosen backend, follow that reference for
-  the flags rather than reinventing them here.
-- **Manual** — the prompt pack *is* the deliverable. Hand over the spec table (SKILL
-  Step 6), validate each drop with §5, continue unchanged.
-
-Two rules hold on every backend:
-
-1. **One model for the whole chain.** Each renderer has its own grain, motion and colour
-   character; a model swap mid-chain keeps position continuity but the character shift
-   reads as a pop. The one sanctioned exception is a single clip a content filter keeps
-   refusing.
-2. **Always run generations detached and poll.** Video generations take 3–8 minutes; a
-   foreground blocking call for eleven clips is an hour of a dead terminal.
-
-## Notes
-
-- **Previz cheaply.** Run the whole chain at the lowest tier / resolution first, approve
-  the journey and the pacing, then re-render the final legs at full quality. The chain is
-  seamless at every tier, so the previz translates directly.
-- **Never overwrite `$VID`.** Encodes go to `$SERVE` and are reproducible; a render costs
-  money and minutes.
-- **Keep the rejects.** `assets/rejected/` is why the next prompt is better than the last.
-- **Keep the frames.** `first-NN.png` is chapter *n*'s poster and reduced-motion still;
-  `last-NN.png` is the next clip's start image and the style reference for its re-roll.
-- **bash 3.2** (macOS default) has no associative arrays — none are used here.
-- **zsh arrays are 1-indexed.** Run every array-driven step as `bash script.sh`, never
-  pasted into an interactive zsh, or the chain grabs the wrong chapter's frames.

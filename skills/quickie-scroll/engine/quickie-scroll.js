@@ -58,7 +58,7 @@
        - loads `clipMobile` / `connectorsMobile` when provided (encode these smaller +
          tighter-GOP — seek cost on a phone decoder is dominated by frames-from-keyframe,
          so a 720p, -g 4 file scrubs far smoother than the 1080p desktop master; see
-         pipeline.md). Falls back to the desktop `clip` if no mobile variant is given.
+         pipeline/encoding.md). Falls back to the desktop `clip` if no mobile variant is given.
        - uses `stillMobile` as the scene poster when provided (pair it with native 9:16
          clipMobile renders so the poster matches the portrait video's first frame instead
          of flashing from a landscape crop). Chosen once at mount; a desktop resize into
@@ -80,7 +80,7 @@
      --sw-font-display / --sw-font-body
 
    REQUIREMENTS ON YOUR ASSETS
-     - clips encoded native-res, crf~20, -g 8, +faststart, no audio (see pipeline.md)
+     - clips encoded native-res, crf~20, -g 8, +faststart, no audio (see pipeline/encoding.md)
      - connectors' endpoints are the neighbouring dives' ACTUAL frames (see SKILL Step 5)
      - (optional) mobile variants at ~720p, -g 4 for smoother phone scrubbing
    The engine loads each clip as a Blob (always seekable) and scrubs currentTime; it does
@@ -530,7 +530,7 @@ function mountQuickieScroll(container, config) {
   // A variant is a slug — the layout and the motion recipe live entirely in the
   // `.sw-foot--<slug>` CSS below, so adding a seventeenth means one entry here
   // and one rule block there, and nothing in this function. The library, the
-  // content keys and which variant suits which page: references/footer-variants.md.
+  // content keys and which variant suits which page: footer/variants.md.
   //
   // Blocks are emitted in one fixed source order and carry their index as
   // --sw-i, which drives the stagger. A content key the user didn't pick emits
@@ -614,7 +614,7 @@ function mountQuickieScroll(container, config) {
 
 // The footer variant library. The slug is the whole contract: it becomes
 // `.sw-foot--<slug>` and everything else about the variant is CSS. See
-// references/footer-variants.md for what each one looks like and when to use it.
+// footer/variants.md for what each one looks like and when to use it.
 const FOOT_VARIANTS = ['minimal', 'luxury', 'type', 'editorial', 'split', 'cta',
   'product', 'cinematic', 'bento', 'nav', 'social', 'newsletter', 'story',
   'interactive', 'experimental', 'depth'];
@@ -789,7 +789,7 @@ function injectCSS() {
      (slide in from a side), --sw-z (depth plane). Declaring transform directly on
      a block would beat the .is-in reset and the reveal would never land.
      Adding a variant is a rule block here plus an entry in FOOT_VARIANTS.
-     Library and copy guidance: references/footer-variants.md. */
+     Library and copy guidance: footer/variants.md. */
   .sw-foot{display:block;overflow:hidden;}
   .sw-foot__inner{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;
     gap:clamp(18px,3vw,40px);}

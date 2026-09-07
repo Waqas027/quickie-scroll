@@ -1,5 +1,11 @@
 # Footer variants
 
+*The sixteen-variant library. Read before asking the footer question.*
+
+**Read with:** [`footer/workflow.md`](workflow.md) · [`footer/content-options.md`](content-options.md) · [`footer/motion.md`](motion.md)
+
+---
+
 The footer is the film's last frame, not a link dump. Sixteen variants, each a
 **layout + a motion recipe**. The user picks exactly one; the pick drives the
 design. Never ship a generic centred row of links because the variant question
@@ -14,57 +20,6 @@ Wiring is data-only — a variant is a slug on the footer act:
 The engine renders one block list and applies the variant's CSS delta. Adding a
 variant later = one entry in this file + one rule block in `quickie-scroll.js`
 (`FOOT_VARIANTS` + the `.sw-foot--<slug>` rules). No skill logic changes.
-
----
-
-## Content keys
-
-Ask which of these the user wants (multi-select). Only what they pick is
-rendered — an unpicked block emits **no DOM at all**, so it can never leave a
-gap in the layout.
-
-| Ask them | Key | Shape |
-|---|---|---|
-| Logo / wordmark | `brand`, `logo` | `brand: 'KALLA'` — or `logo: '/logo.svg'` for an image |
-| Tagline | `tagline` | one line under the mark |
-| Big closing line | `headline` | the footer's own headline; word-animated in the split variants below |
-| Navigation | `links` | `[{ label, href }]` — a flat row |
-| Product / grouped links | `columns` | `[{ title, links: [{ label, href }] }]` |
-| Social links | `social` | `[{ label, href }]` — external `href`s open in a new tab |
-| Contact | `contact` | `[{ label, href }]` — `mailto:` / `tel:` / plain address lines |
-| Newsletter | `newsletter` | `{ title, placeholder, action: { label } }` |
-| CTA button | `cta` | `{ label, href }` or `{ primary: {…}, secondary: {…} }` |
-| Legal links | `legal` | `[{ label, href }]` — rendered small and dim |
-| Copyright | `note` | `'© 2026 KALLA'` |
-| Image / product shot | `media`, `mediaAlt` | a path; masked-reveals on entry |
-| Marquee text | `marquee` | one phrase; repeated and scrolled |
-| Custom content | `html` | verbatim markup |
-
-Blocks always render in this source order — `brand, headline, marquee, media,
-columns, links, social, contact, newsletter, cta, custom, legal, note` — and
-each carries its index as `--sw-i`, which is what drives the stagger. The
-variant's CSS re-places them; it never needs them re-ordered in the DOM.
-
-## Motion, once, for all sixteen
-
-Built into the engine — no Framer Motion, no GSAP, no dependency:
-
-- **Reveal on entry.** An `IntersectionObserver` adds `is-in` when the footer
-  comes into view. Blocks rise and fade in sequence, `--sw-i × --sw-stagger`.
-- **Staggered typography.** Variants marked *word-split* below break the
-  headline into `<span>`s that arrive one word at a time.
-- **Parallax.** The engine's existing scroll read writes `--sw-py` (−1…1, the
-  footer's travel through the viewport) on each footer. Variants use it for
-  drift; nothing extra listens to scroll.
-- **Magnetic hover.** One delegated `pointermove` per footer, desktop only —
-  links lean toward the cursor via `--sw-mx/--sw-my`.
-- **Reduced motion.** `prefers-reduced-motion: reduce` skips the observer
-  entirely: everything is visible, static, and the marquee stops.
-
-Per-variant knobs: `--sw-stagger` (default 80ms), `--sw-rise` (26px),
-`--sw-pop` (scale). Anything more is that variant's own rules.
-
----
 
 ## The library
 
