@@ -98,10 +98,17 @@
           placeholder: 'you@email.com',
           action: { label: 'Begin' } },
 
+        // The footer is a premium animated final section, not a link row. `variant`
+        // picks the layout AND the motion; the content keys below are whatever the
+        // user chose. Sixteen variants: references/footer-variants.md.
         { kind: 'footer', tone: 'dark',
+          variant: 'luxury',
           brand: 'BRAND',
-          note: '© 2026 BRAND',
-          links: [{ label: 'Journey', href: '#top' }, { label: 'Contact', href: '#' }] },
+          tagline: 'One line that closes the film.',
+          links: [{ label: 'Journey', href: '#top' }, { label: 'Contact', href: '#' }],
+          social: [{ label: 'Instagram', href: 'https://instagram.com/' }],
+          legal: [{ label: 'Privacy', href: '#' }, { label: 'Terms', href: '#' }],
+          note: '© 2026 BRAND' },
       ],
     });
   </script>

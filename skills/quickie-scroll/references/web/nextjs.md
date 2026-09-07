@@ -143,7 +143,11 @@ const config: QSConfig = {
     { kind: 'statement', tone: 'light', eyebrow: 'WHAT WE ACTUALLY SELL',
       title: 'The distance was never the point.' },
     { kind: 'cta', tone: 'tint', title: 'Tell us where home is.', action: { label: 'Begin' } },
-    { kind: 'footer', tone: 'dark', brand: 'MERIDIAN', note: '© 2026 Meridian Air' },
+    // `variant` picks the footer's layout and its motion — see references/footer-variants.md.
+    { kind: 'footer', tone: 'dark', variant: 'luxury', brand: 'MERIDIAN',
+      tagline: 'Scheduled service, four cities.',
+      links: [{ label: 'Routes', href: '#' }, { label: 'Contact', href: '#' }],
+      legal: [{ label: 'Privacy', href: '#' }], note: '© 2026 Meridian Air' },
   ],
 };
 
@@ -175,6 +179,7 @@ What a React project buys you is everything *around* the film:
 |---|---|---|
 | Smooth scroll feel | **Lenis** | The one change you should always make |
 | Acts animating in | Framer Motion `whileInView` | Acts are ordinary DOM; animate freely |
+| Footer animation | **nothing — the engine ships it** | Reveal, stagger, parallax, marquee, magnetic hover and depth are all in the `variant`. Adding Framer Motion here duplicates it |
 | Pinned//timeline effects in the acts | GSAP ScrollTrigger | Keep it **out** of the film's scroll range — two systems driving one scroll fight |
 | Per-chapter routes / deep links | Next router + the engine's `jumpTo` | Wire a `?chapter=` param to a scroll offset |
 | Optimised posters | `next/image` on the acts | Do **not** use it for `still` — the engine sets `img.src` itself |

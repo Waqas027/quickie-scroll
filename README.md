@@ -145,6 +145,9 @@ which proved the seamless-chain technique. This skill adds:
 - a markdown prompt pack in numbered folders, tool-agnostic by construction
 - HUD chrome, per-chapter copy alignment, and an editorial page after the film — statement,
   cards, reviews, testimonials, CTA, footer or anything custom
+- a sixteen-variant animated footer library — the variant the user picks drives the layout
+  *and* the motion (reveal, stagger, word-split headlines, parallax, marquee, magnetic
+  hover, depth planes), with no motion dependency added
 - the Flutter and native-Android app targets, with a toolchain probe that refuses to
   scaffold an app the machine cannot build
 - a Next.js scaffold and React wrapper in place of a lone HTML file, and a `destroy()`

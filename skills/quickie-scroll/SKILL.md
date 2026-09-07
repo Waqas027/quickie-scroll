@@ -220,8 +220,9 @@ user-supplied references".
    | Custom section | `html` | Anything they describe. |
    | Nothing — end at the film | — | A pure hero. |
 
-   `footer` is appended whenever anything follows the film — a page that ends mid-panel
-   reads as broken — unless they picked "nothing".
+   A footer is appended whenever anything follows the film — a page that ends mid-panel
+   reads as broken — unless they picked "nothing". Which footer is **Step 6b**, its own
+   question; never pick one silently.
 
    Order them so the page descends from image to argument to ask: statement → reviews or
    testimonials → cards → animated section → cta → footer. Say the order back; it's easier
@@ -235,6 +236,43 @@ user-supplied references".
    (Step 8).
 
    "Film only" is a legitimate answer — but it must be the user's answer, not your default.
+
+**6b. The footer — two questions, whenever the page has one.** The footer is the film's
+   last frame, and a generic centred row of links throws away the whole descent. Full
+   library, with each variant's layout, visual direction, content fit and motion recipe:
+   **`references/footer-variants.md`**. Read it before asking.
+
+   **First, the variant — single-select, exactly one.** Don't paste all sixteen at a user.
+   Offer three or four that suit the film you just designed (the file's "Picking one"
+   section maps page types to variants) and say the rest are available on request:
+
+   | | | | |
+   |---|---|---|---|
+   | `minimal` Minimal / Clean | `luxury` Luxury / Cinematic | `type` Large Typography | `editorial` Editorial |
+   | `split` Split Layout | `cta` Full-Width CTA | `product` Product-Focused | `cinematic` Dark Cinematic |
+   | `bento` Bento / Grid | `nav` Navigation-Focused | `social` Social / Community | `newsletter` Newsletter-Focused |
+   | `story` Brand Story | `interactive` Interactive / Animated | `experimental` Experimental / Creative | `depth` 3D / Depth-Based |
+
+   **Then the contents — multi-select.** Logo/wordmark · tagline · closing headline ·
+   navigation · product or grouped link columns · social · contact · newsletter ·
+   CTA button · legal links · copyright · image or product shot · marquee text ·
+   custom. Collect the actual copy and hrefs for everything chosen; the key names and
+   shapes are the table at the top of `footer-variants.md`.
+
+   The variant slug goes straight into the act — `{ kind: 'footer', variant: 'luxury', … }` —
+   and **it is what drives the design**. A key the user didn't pick renders no element at
+   all, so an unpicked block can never open a gap in the layout.
+
+   **Every footer is animated.** The engine ships the motion: scroll-triggered reveal
+   (`IntersectionObserver`), per-block stagger, word-by-word headlines in the split
+   variants, parallax drift off the engine's own scroll read, clip-path image reveals,
+   marquee, magnetic hover, and depth planes — all keyed to the variant, all honouring
+   `prefers-reduced-motion`. **Don't reach for Framer Motion or GSAP for the footer**;
+   it would duplicate this and pull a dependency into a zero-dependency file. Those stay
+   for custom `html` acts (Step 8).
+
+   Match `tone` to the film's last frame. A dark descent that ends on a white footer reads
+   as two sites glued together.
 
 **7. Mobile** — desktop only, or a native 9:16 portrait chain as well (roughly doubles the
    video workload — state that). Forced on when the target is the app. The engine's phone
@@ -571,6 +609,11 @@ Beyond the chain and the copy, three things carry the cinematic feel:
   frame: a hard rule or a colour jump at that boundary is what makes a site feel like two
   sites glued together. Extra motion in the acts is Framer Motion or CSS below the film —
   never a second scrubbed video, and never a scroll driver over the film's range.
+- **`variant` on the footer act** — the sixteen-variant footer library
+  (`references/footer-variants.md`, chosen in Step 6b). The slug drives layout *and*
+  motion: reveal-on-entry, per-block stagger, word-split headlines, parallax drift,
+  clip-path image reveals, marquee, magnetic hover, depth planes — all built in, all
+  reduced-motion aware. The footer's own motion needs no Framer Motion.
 
 Pacing lives in two per-chapter knobs: `scroll` (viewport-heights of scroll — more distance
 = longer dwell) and `linger` (0–0.6; remaps time so the camera settles mid-chapter exactly
@@ -614,6 +657,9 @@ Do not skip. In a browser (headless is fine):
   doesn't serve byte ranges.
 - **The handover to the acts.** Scroll past the last seam: the copy, route rail, HUD and
   hint must fade, the film must dim, and the editorial panels must scroll cleanly over it.
+- **The footer reveal.** Scroll into it once: blocks must stagger in, not appear
+  pre-revealed and not stay hidden. Confirm the rendered variant is the one the user
+  chose, and that no block the user did not pick left an empty column behind it.
 - **Reduced motion.** `prefers-reduced-motion` must fall back to the stills — no video
   loads at all, no particles.
 - **Phone**, throttled 4–6× CPU, scrolled fast: the clip tracks without freezing, the first
@@ -659,6 +705,9 @@ Do not skip. In a browser (headless is fine):
   before accepting. No crossfade fixes a wrong start.
 - **Copy sits in the same corner for the whole film** → `align` was never set. Alternate it.
 - **The page ends abruptly at the last frame** → no `acts`. Ask; don't default to film-only.
+- **The footer is a plain row of links** → no `variant` on the footer act, so it fell back
+  to `minimal`. Step 6b is a real question with a real answer; the sixteen variants are in
+  `references/footer-variants.md`.
 - **The model ignored half the prompt** → the prompt was prose, not blocks. Rewrite it as
   the seven labelled blocks (Step 2c). Unlabelled instructions are the ones dropped first.
 - **The clip does a different move than the one asked for** → two moves in the CAMERA
@@ -712,6 +761,9 @@ Do not skip. In a browser (headless is fine):
 ## References
 
 - `references/looks.md` — the seven-look art-direction library and the realism checklist.
+- `references/footer-variants.md` — the sixteen-variant footer library (Step 6b): each
+  one's layout, visual direction, content fit and motion recipe, plus the content-key
+  table and how to pick. Read it before asking the footer question.
 - `references/prompts.md` — the prompt-pack layout, the one image prompt, the **seven-block
   video prompt** and the nine rules behind it, working from user-supplied product and style
   references, the move library, the intake checklist, and the portrait rules.
@@ -722,7 +774,8 @@ Do not skip. In a browser (headless is fine):
 - `references/detect-target.sh` — the app-toolchain probe (Step 0.2). Prints
   `TARGET=FLUTTER|ANDROID|BOTH|NONE`.
 - `references/quickie-scroll.js` — the scrub engine (chain, blob-seek, crossfades, pinned
-  copy, HUD, alignment, acts, route rail, reduced motion, phone hardening). Returns a
+  copy, HUD, alignment, acts, the sixteen-variant animated footer, route rail, reduced
+  motion, phone hardening). Returns a
   `{ destroy }` handle for component frameworks.
 - `references/web/nextjs.md` — the Next.js scaffold: layout, Lenis smooth scroll, config
   page, where the extra animation capability goes, and what not to do.
