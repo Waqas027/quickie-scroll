@@ -45,7 +45,7 @@ that can't build one.
   assets/images|videos|rejected|frames
 
   # web target — a Next.js project
-  app/{layout,page}.tsx · components/{QuickieScroll.tsx,quickie-scroll.js} · public/assets/
+  app/{layout,page}.tsx · components/{QuickieScroll.tsx,quickie-scroll.js,quickie-scroll.d.ts} · public/assets/
 
   # app target — whichever toolchain the probe found
   lib/scroll_scrub.dart                            (Flutter)
@@ -71,7 +71,7 @@ running the step, not after.
 | Step | What happens | Read first |
 |---|---|---|
 | **0** | Bootstrap — ffmpeg, renderer probe, app-toolchain probe | [`core/bootstrap.md`](core/bootstrap.md) |
-| **1** | Interview — references, target, subject, look, camera, chapters, acts, product sections, footer, mobile, asset source | [`discovery/interview.md`](discovery/interview.md) |
+| **1** | Interview — references, target, subject, look, camera, chapters, acts, mobile, asset source | [`discovery/interview.md`](discovery/interview.md) |
 | **2** | State the chained workflow to the user, then write the prompt pack | [`core/rules.md`](core/rules.md) → [`video/prompt-pack.md`](video/prompt-pack.md) |
 | **3** | The one start frame | [`image/start-frame.md`](image/start-frame.md) |
 | **4** | Rendering — who renders, at what cost | [`video/rendering.md`](video/rendering.md) |
@@ -97,15 +97,7 @@ prompt. → [`discovery/interview.md`](discovery/interview.md), which routes to
 [`art-direction/looks.md`](art-direction/looks.md),
 [`animation/camera.md`](animation/camera.md),
 [`animation/scene-planning.md`](animation/scene-planning.md),
-[`sections/acts.md`](sections/acts.md),
-[`sections/product-sections/`](sections/product-sections/workflow.md) and
-[`footer/workflow.md`](footer/workflow.md).
-
-**Question 6a is not optional.** Once the chapter plan exists, reason out and propose **at
-least five product-specific animated sections** for this particular product — anatomy,
-material, craft, features, interactive showcase, story — as a multi-select checklist. Never
-the same list for two builds; the reasoning is in
-[`sections/product-sections/selection-rules.md`](sections/product-sections/selection-rules.md).
+[`sections/acts.md`](sections/acts.md).
 
 Close the interview by writing `README.md` and `brief.md` before a single prompt file
 exists. → [`project/documents.md`](project/documents.md)
@@ -162,7 +154,7 @@ app-target frame sequences differ. → [`pipeline/encoding.md`](pipeline/encodin
 - **Web** — scaffold a **Next.js App Router project**, not a single HTML file. Engine,
   wrapper, types, Lenis smooth scroll and the two hard rules:
   [`platforms/web/nextjs.md`](platforms/web/nextjs.md). Engine config — chapters, `hud`,
-  `align`, `acts`, footer `variant`, `scroll`/`linger` pacing:
+  `align`, `acts`, `scroll`/`linger` pacing:
   [`platforms/web/engine-config.md`](platforms/web/engine-config.md).
 - **App** — per the Step 0 probe: [`platforms/flutter/flutter.md`](platforms/flutter/flutter.md)
   or [`platforms/android/android.md`](platforms/android/android.md). Both scrub a
@@ -170,8 +162,7 @@ app-target frame sequences differ. → [`pipeline/encoding.md`](pipeline/encodin
 
 ### Step 9 — QA
 
-Do not skip. Seams, scrubbing, the handover to the acts, the footer reveal, reduced motion,
-phone. → [`validation/qa-checklist.md`](validation/qa-checklist.md)
+Do not skip. Seams, scrubbing, the handover to the acts, reduced motion, phone. → [`validation/qa-checklist.md`](validation/qa-checklist.md)
 
 When something is wrong, the symptom → cause index is
 [`validation/troubleshooting.md`](validation/troubleshooting.md).
@@ -200,8 +191,6 @@ Where to change what. One domain, one folder, one source of truth.
 | Writing clip *n* from clip *n−1*; connector prompts | `video/continuity.md` |
 | Renderer choice, cost, spend approval | `video/rendering.md` |
 | The editorial page after the film | `sections/acts.md` |
-| Which product-specific animated sections get suggested, and how they move | `sections/product-sections/` |
-| Footer behaviour | `footer/` |
 | Next.js scaffold, React wrapper, engine config | `platforms/web/` |
 | The Flutter or Android app target | `platforms/flutter/`, `platforms/android/` |
 | The scrub engine itself | `engine/quickie-scroll.js` |
@@ -213,8 +202,8 @@ Where to change what. One domain, one folder, one source of truth.
 ## Files that are copied into a build
 
 - [`engine/quickie-scroll.js`](engine/quickie-scroll.js) — the scrub engine (chain,
-  blob-seek, crossfades, pinned copy, HUD, alignment, acts, the sixteen-variant animated
-  footer, route rail, reduced motion, phone hardening). Returns a `{ destroy }` handle for
+  blob-seek, crossfades, pinned copy, HUD, alignment, acts, route rail, reduced motion,
+  phone hardening). Returns a `{ destroy }` handle for
   component frameworks.
 - [`platforms/web/QuickieScroll.tsx`](platforms/web/QuickieScroll.tsx) +
   [`quickie-scroll.d.ts`](platforms/web/quickie-scroll.d.ts) — the React wrapper and types.

@@ -161,8 +161,7 @@ skills/quickie-scroll/
   animation/            scene-planning.md · chain.md · camera.md
   image/                start-frame.md
   video/                prompt-pack.md · prompting.md · continuity.md · rendering.md
-  sections/             acts.md · product-sections/ (workflow, library, selection, motion, quality)
-  footer/               workflow.md · variants.md · content-options.md · motion.md
+  sections/             acts.md
   platforms/            web/ · flutter/ · android/
   engine/               quickie-scroll.js
   pipeline/             scripts.md · encoding.md · backends.md
@@ -171,30 +170,19 @@ skills/quickie-scroll/
   tools/                detect-target.sh · knockout.py
 ```
 
-Where do I change…? Footer behaviour → `footer/`. Video prompting → `video/`. Scene
+Where do I change…? Video prompting → `video/`. Scene
 continuity → `animation/`. Global quality rules → `core/`. Every module opens with a
 one-line purpose and a **Read with** list, so its dependencies are explicit.
 
 ## Relationship to `lets-scroll`
 
-Built on the pipeline and scrub engine from [`lets-scroll`](https://github.com/cywang/lets-scroll),
-which proved the seamless-chain technique. This skill adds:
+An improved version of [`lets-scroll`](https://github.com/AIwithhassan/lets-scroll), which
+does the core thing: scroll scrubs a pre-rendered clip chain in a single HTML file.
 
-- a realism-first art-direction library in place of the diorama default
-- one generated image per build instead of one per scene — the chain supplies the rest
-- the seven-block video prompt, written for image-to-video model behaviour rather than as
-  cinematic prose, plus product-reference locking and style-reference extraction
-- a markdown prompt pack in numbered folders, tool-agnostic by construction
-- HUD chrome, per-chapter copy alignment, and an editorial page after the film — statement,
-  cards, reviews, testimonials, CTA, footer or anything custom
-- a sixteen-variant animated footer library — the variant the user picks drives the layout
-  *and* the motion (reveal, stagger, word-split headlines, parallax, marquee, magnetic
-  hover, depth planes), with no motion dependency added
-- the Flutter and native-Android app targets, with a toolchain probe that refuses to
-  scaffold an app the machine cannot build
-- a Next.js scaffold and React wrapper in place of a lone HTML file, and a `destroy()`
-  handle on the engine so it unmounts cleanly
-- a renderer-agnostic pipeline — a connected MCP is an option, not a requirement
+This plugin adds an interview, a seven-look art-direction library, a seven-block
+image-to-video prompt pack, one start image per build instead of one per scene, an editorial
+page after the film, Flutter and native-Android targets with a toolchain probe, and a
+Next.js scaffold with a React wrapper and a `destroy()` handle.
 
 ## License
 

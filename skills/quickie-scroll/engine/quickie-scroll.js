@@ -274,12 +274,15 @@ function mountQuickieScroll(container, config) {
         v.addEventListener('seeked', () => { s.el.classList.add('has-clip'); }, { once: true });
         v.addEventListener('loadeddata', () => { try { v.pause(); } catch (e) {} if (userReady) primeVideo(v); });
         s.el.appendChild(v); s.video = v; s.hasClip = true;
-      }).catch(() => { s.loading = false; });
+      }).catch(() => { /* stays "loading" on purpose: read() runs every frame, so
+                          re-arming here would refetch a 404 clip at scroll speed.
+                          The still remains as the scene. */ });
   }
 
   function read() {
     const y = window.scrollY || window.pageYOffset;
-    const fade = CROSSFADE * vh;
+    // Floored: crossfade:0 would make every in-range scene 0/0 = NaN opacity — a blank film.
+    const fade = Math.max(1, CROSSFADE * vh);
     let ci = 0;
     for (let i = 0; i < NSEG; i++) if (y >= SEGMENTS[i].start) ci = i;
 
@@ -309,11 +312,11 @@ function mountQuickieScroll(container, config) {
     for (let i = 0; i < N; i++) {
       const seg = SECTIONS[i]._seg;
       const pr = clamp((y - seg.start) / (seg.end - seg.start), 0, 1);
-      const before = y < seg.start, after = y > seg.end;
+      const before = y < seg.start, past = y > seg.end;   // not `after` — that is the acts container
       let cop;
-      if (i === 0) cop = after ? 0 : smooth(1 - pr / 0.62);            // greets on landing
+      if (i === 0) cop = past ? 0 : smooth(1 - pr / 0.62);            // greets on landing
       else if (i === N - 1) cop = before ? 0 : smooth(pr / 0.4);       // holds CTA at the end
-      else cop = (before || after) ? 0 : smooth(1 - Math.abs(pr - 0.5) / 0.5);
+      else cop = (before || past) ? 0 : smooth(1 - Math.abs(pr - 0.5) / 0.5);
       const c = copies[i];
       c.style.opacity = cop;
       // -50% keeps the block optically centred (the CSS rule is overridden by this
@@ -346,15 +349,6 @@ function mountQuickieScroll(container, config) {
     const past = after.childElementCount > 0 && y > totalW * vh - vh * 0.35;
     if (past !== isPast) { isPast = past; container.classList.toggle('is-past', past); }
     if (particles) particles.style.transform = `translate3d(0, ${-y * 0.05}px, 0)`;
-    // Footer parallax rides this same read rather than adding a second scroll
-    // listener: --sw-py is the footer's travel through the viewport, +1 (just
-    // below the fold) → -1 (just above it), and the variants that want drift
-    // read it from CSS. One rect per footer per frame, and there is one footer.
-    for (let i = 0; i < feet.length; i++) {
-      const r = feet[i].getBoundingClientRect();
-      feet[i].style.setProperty('--sw-py',
-        (clamp((r.top + r.height / 2) / vh) * 2 - 1).toFixed(3));
-    }
     ticking = false;
   }
 
@@ -396,45 +390,6 @@ function mountQuickieScroll(container, config) {
   window.addEventListener('pointerdown', onFirstGesture, { once: true, passive: true });
   window.addEventListener('touchstart', onFirstGesture, { once: true, passive: true });
 
-  // ---- footer motion ----
-  // The reveal is an IntersectionObserver, not a scroll handler: it fires once,
-  // costs nothing while the film is scrubbing, and under reduced motion we skip
-  // it entirely and simply leave the footer visible.
-  const feet = [].slice.call(after.querySelectorAll('.sw-foot'));
-  let footIO = null;
-  if (feet.length && !reduce && 'IntersectionObserver' in window) {
-    footIO = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if (!e.isIntersecting) return;
-        e.target.classList.add('is-in');
-        footIO.unobserve(e.target);          // a reveal is a one-shot, not a toggle
-      });
-    }, { rootMargin: '0px 0px -12% 0px' });
-    feet.forEach(f => footIO.observe(f));
-  } else {
-    feet.forEach(f => f.classList.add('is-in'));
-  }
-  // Magnetic hover — one delegated listener per footer rather than one per link,
-  // and never on touch, where there is no cursor to lean toward.
-  const magnetic = (reduce || coarse)
-    ? [] : feet.filter(f => /--(interactive|experimental|depth|social|cta)\b/.test(f.className));
-  function magMove(e) {
-    const t = e.target.closest && e.target.closest('a,button');
-    if (!t || !this.contains(t)) return;
-    const r = t.getBoundingClientRect();
-    t.style.setProperty('--sw-mx', ((e.clientX - r.left - r.width / 2) * 0.26).toFixed(1) + 'px');
-    t.style.setProperty('--sw-my', ((e.clientY - r.top - r.height / 2) * 0.26).toFixed(1) + 'px');
-  }
-  function magLeave() {
-    this.querySelectorAll('a,button').forEach(t => {
-      t.style.removeProperty('--sw-mx'); t.style.removeProperty('--sw-my');
-    });
-  }
-  magnetic.forEach(f => {
-    f.addEventListener('pointermove', magMove);
-    f.addEventListener('pointerleave', magLeave);
-  });
-
   // Particles are a per-frame cost we can't afford alongside video scrubbing on a phone.
   seedParticles(particles, reduce || coarse);
   const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(read); } };
@@ -461,11 +416,6 @@ function mountQuickieScroll(container, config) {
   function destroy() {
     if (dead) return;
     dead = true;                                  // stops the rAF loop and pending loads
-    if (footIO) { footIO.disconnect(); footIO = null; }
-    magnetic.forEach(f => {
-      f.removeEventListener('pointermove', magMove);
-      f.removeEventListener('pointerleave', magLeave);
-    });
     window.removeEventListener('scroll', onScroll);
     window.removeEventListener('resize', onResize);
     window.removeEventListener('orientationchange', layout);
@@ -497,6 +447,7 @@ function mountQuickieScroll(container, config) {
   // same rhythm and the same theme tokens as the film it follows.
   function renderAct(a) {
     if (!a || !a.kind) return null;
+    if (a.kind === 'footer') return renderFooter(a);
     const s = el('section', 'sw-act sw-act--' + a.kind + ' sw-act--' + (a.tone || 'light'));
     if (a.id) s.id = a.id;
     if (a.kind === 'statement') {
@@ -519,89 +470,29 @@ function mountQuickieScroll(container, config) {
         `<form class="sw-act__form" onsubmit="return false">` +
         `<input type="email" placeholder="${esc(a.placeholder || 'your@email.com')}" aria-label="${esc(a.placeholder || 'Email address')}" />` +
         `<button type="submit">${esc((a.action && a.action.label) || 'Send')}</button></form>`;
-    } else if (a.kind === 'footer') {
-      return renderFooter(a);
     } else if (a.kind === 'html') {
       s.innerHTML = a.html || '';
     } else return null;
     return s;
   }
-  // ---- the footer: one block renderer, sixteen CSS deltas -------------------
-  // A variant is a slug — the layout and the motion recipe live entirely in the
-  // `.sw-foot--<slug>` CSS below, so adding a seventeenth means one entry here
-  // and one rule block there, and nothing in this function. The library, the
-  // content keys and which variant suits which page: footer/variants.md.
-  //
-  // Blocks are emitted in one fixed source order and carry their index as
-  // --sw-i, which drives the stagger. A content key the user didn't pick emits
-  // no element at all — never an empty one — so an unused block can't leave a
-  // gap in any variant's grid.
+  // ---- the footer: brand, an optional note, and a link row -----------------
+  // A key the user didn't give emits no element at all, and a footer with
+  // nothing in it is dropped rather than rendered as an empty band.
   function renderFooter(a) {
-    const v = FOOT_VARIANTS.indexOf(a.variant) >= 0 ? a.variant : 'minimal';
-    const f = el('footer', 'sw-act sw-act--footer sw-act--' + esc(a.tone || 'dark') +
-                           ' sw-foot sw-foot--' + v);
+    const f = el('footer', 'sw-act sw-act--footer sw-act--' + esc(a.tone || 'dark'));
     if (a.id) f.id = a.id;
-    const inner = el('div', 'sw-foot__inner');
-    let i = 0;
-    const add = (name, html, cls) => {
-      if (!html) return;
-      const b = el('div', 'sw-foot__b sw-foot__b--' + name + (cls ? ' ' + cls : ''));
-      b.style.setProperty('--sw-i', i++);
-      b.innerHTML = html;
-      inner.appendChild(b);
-    };
     // An off-site link opens in a new tab; an in-page one must not, or the
     // anchor jump lands in a blank window.
-    const links = (arr, cls) => (arr && arr.length)
-      ? `<nav class="sw-act__links${cls ? ' ' + cls : ''}">${arr.map(l =>
+    const links = (a.links && a.links.length)
+      ? `<nav class="sw-act__links">${a.links.map(l =>
           `<a href="${esc(l.href || '#')}"${/^(https?:)?\/\//.test(l.href || '') ? ' target="_blank" rel="noopener"' : ''}>` +
-          `<span>${esc(l.label || '')}</span></a>`).join('')}</nav>`
-      : '';
-    const split = FOOT_SPLIT[v] ? 'is-split' : '';
-
-    add('brand',
-      (a.logo ? `<img class="sw-foot__logo" src="${esc(a.logo)}" alt="${esc(a.brand || '')}" decoding="async" />`
-        : (a.brand ? `<span class="sw-act__brand">${esc(a.brand)}</span>` : '')) +
-      (a.tagline ? `<p class="sw-foot__tagline">${esc(a.tagline)}</p>` : ''));
-    add('headline', a.headline
-      ? `<h2 class="sw-foot__headline">${split ? words(a.headline) : esc(a.headline)}</h2>` : '',
-      split);
-    // Two identical runs side by side, each translating a full width: the second
-    // is under the cursor the instant the first leaves, so the loop has no seam.
-    add('marquee', a.marquee
-      ? `<div class="sw-foot__marquee">${[0, 1].map(k =>
-          `<span${k ? ' aria-hidden="true"' : ''}>${(esc(a.marquee) + ' · ').repeat(4)}</span>`).join('')}</div>` : '');
-    add('media', a.media
-      ? `<figure class="sw-foot__media"><img src="${esc(a.media)}" alt="${esc(a.mediaAlt || '')}" loading="lazy" decoding="async" /></figure>` : '');
-    add('columns', (a.columns && a.columns.length)
-      ? `<div class="sw-foot__cols">${a.columns.map(c =>
-          `<div class="sw-foot__col">${c.title ? `<h3>${esc(c.title)}</h3>` : ''}${links(c.links)}</div>`).join('')}</div>` : '');
-    add('links', links(a.links));
-    add('social', links(a.social, 'sw-foot__social'));
-    add('contact', (a.contact && a.contact.length)
-      ? `<address class="sw-foot__contact">${a.contact.map(c => c.href
-          ? `<a href="${esc(c.href)}">${esc(c.label || '')}</a>`
-          : `<span>${esc(c.label || c)}</span>`).join('')}</address>` : '');
-    add('newsletter', a.newsletter
-      ? (a.newsletter.title ? `<h3 class="sw-foot__sub">${esc(a.newsletter.title)}</h3>` : '') +
-        `<form class="sw-act__form" onsubmit="return false">` +
-        `<input type="email" placeholder="${esc(a.newsletter.placeholder || 'your@email.com')}" aria-label="${esc(a.newsletter.placeholder || 'Email address')}" />` +
-        `<button type="submit">${esc((a.newsletter.action && a.newsletter.action.label) || 'Subscribe')}</button></form>` : '');
-    // Accepts the act-wide {primary,secondary} shape and the bare {label,href} one.
-    add('cta', a.cta ? ctaBtns((a.cta.primary || a.cta.secondary) ? a.cta : { primary: a.cta }) : '');
-    add('custom', a.html || '');
-    add('legal', links(a.legal, 'sw-foot__legal'));
-    add('note', a.note ? `<span class="sw-act__note">${esc(a.note)}</span>` : '');
-
-    if (!inner.childElementCount) return null;   // nothing picked = no footer, not an empty band
-    f.appendChild(inner);
+          `<span>${esc(l.label || '')}</span></a>`).join('')}</nav>` : '';
+    f.innerHTML =
+      (a.brand ? `<span class="sw-act__brand">${esc(a.brand)}</span>` : '') +
+      links +
+      (a.note ? `<span class="sw-act__note">${esc(a.note)}</span>` : '');
+    if (!f.childElementCount) return null;
     return f;
-  }
-  // Per-word spans so a headline can arrive a word at a time. --sw-w is the word
-  // index; the block's own reveal is disabled (is-split) so the two don't fight.
-  function words(t) {
-    return String(t).trim().split(/\s+/).map((w, k) =>
-      `<span class="sw-foot__w" style="--sw-w:${k}">${esc(w)}</span>`).join(' ');
   }
   function esc(s) { return String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
   function ctaBtns(cta) {
@@ -611,15 +502,6 @@ function mountQuickieScroll(container, config) {
     return h;
   }
 }
-
-// The footer variant library. The slug is the whole contract: it becomes
-// `.sw-foot--<slug>` and everything else about the variant is CSS. See
-// footer/variants.md for what each one looks like and when to use it.
-const FOOT_VARIANTS = ['minimal', 'luxury', 'type', 'editorial', 'split', 'cta',
-  'product', 'cinematic', 'bento', 'nav', 'social', 'newsletter', 'story',
-  'interactive', 'experimental', 'depth'];
-// Variants whose headline arrives word by word instead of as one block.
-const FOOT_SPLIT = { type: 1, editorial: 1, cta: 1, experimental: 1 };
 
 function seedParticles(host, reduce) {
   if (!host || reduce) return;
@@ -774,222 +656,18 @@ function injectCSS() {
   .sw-act__form{display:flex;align-items:center;gap:6px;margin-top:34px;padding:6px 6px 6px 22px;border-radius:999px;background:#fff;box-shadow:0 10px 30px rgba(0,0,0,.08);max-width:100%;}
   .sw-act__form input{border:0;outline:0;background:transparent;font:inherit;font-size:.98rem;padding:12px 0;min-width:min(46vw,240px);color:inherit;}
   .sw-act__form button{border:0;cursor:pointer;font:inherit;font-weight:600;font-size:.94rem;padding:13px 26px;border-radius:999px;background:#171419;color:#fff;}
-  .sw-act--footer{padding-block:clamp(40px,7vh,72px);font-size:.86rem;}
+  .sw-act--footer{padding-block:clamp(40px,7vh,72px);font-size:.86rem;display:flex;flex-wrap:wrap;
+    align-items:center;justify-content:space-between;gap:clamp(18px,3vw,40px);}
   .sw-act__brand{font-family:var(--sw-font-display);font-weight:600;letter-spacing:.04em;}
   .sw-act__links{display:flex;flex-wrap:wrap;gap:clamp(14px,2vw,30px);}
-  .sw-act__links a{color:inherit;text-decoration:none;opacity:.7;transition:opacity .25s,transform .25s;
-    transform:translate(var(--sw-mx,0),var(--sw-my,0));}
+  .sw-act__links a{color:inherit;text-decoration:none;opacity:.7;transition:opacity .25s;}
   .sw-act__links a:hover{opacity:1;}
   .sw-act__note{opacity:.5;}
 
-  /* ---- the footer: shared motion, then one delta per variant ----------------
-     Slug → .sw-foot--<slug>. Blocks carry --sw-i (source index) and are laid out
-     by the variant, never re-ordered in the DOM. A variant sets the knobs rather
-     than re-declaring transform itself: --sw-stagger, --sw-rise, --sw-pop, --sw-sx
-     (slide in from a side), --sw-z (depth plane). Declaring transform directly on
-     a block would beat the .is-in reset and the reveal would never land.
-     Adding a variant is a rule block here plus an entry in FOOT_VARIANTS.
-     Library and copy guidance: footer/variants.md. */
-  .sw-foot{display:block;overflow:hidden;}
-  .sw-foot__inner{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;
-    gap:clamp(18px,3vw,40px);}
-  /* border-box because a variant may pad the block itself (bento's tiles do), and
-     the stacked phone layout gives every block width:100%. */
-  .sw-foot__b{box-sizing:border-box;--sw-d:calc(var(--sw-i,0) * var(--sw-stagger,80ms));min-width:0;opacity:0;
-    transform:translate3d(var(--sw-sx,0),var(--sw-rise,26px),var(--sw-z,0)) scale(var(--sw-pop,1));
-    transition:opacity .8s cubic-bezier(.16,.84,.24,1) var(--sw-d),
-               transform .8s cubic-bezier(.16,.84,.24,1) var(--sw-d);}
-  .sw-foot.is-in .sw-foot__b{opacity:1;transform:translate3d(0,0,var(--sw-z,0));}
-  /* A word-split headline animates its own words, so its block must not also
-     fade — the two transforms would compound and it would arrive twice. */
-  .sw-foot__b.is-split{opacity:1;transform:none;}
-  .sw-foot__w{display:inline-block;opacity:0;
-    transform:translateY(.62em) rotate(var(--sw-wrot,0deg));
-    transition:opacity .7s cubic-bezier(.16,.84,.24,1) calc(var(--sw-w,0) * 55ms + 80ms),
-               transform .7s cubic-bezier(.16,.84,.24,1) calc(var(--sw-w,0) * 55ms + 80ms);}
-  .sw-foot.is-in .sw-foot__w{opacity:1;transform:none;}
-
-  /* The structured variants share a 12-column grid. This default has to come
-     before them: a block spans the full width unless its variant says otherwise,
-     so a content key the user did not pick costs no track and cannot open a gap. */
-  .sw-foot--editorial .sw-foot__inner,.sw-foot--split .sw-foot__inner,
-  .sw-foot--product .sw-foot__inner,.sw-foot--nav .sw-foot__inner,
-  .sw-foot--story .sw-foot__inner,.sw-foot--newsletter .sw-foot__inner,
-  .sw-foot--depth .sw-foot__inner{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));
-    align-items:start;row-gap:clamp(24px,4vh,56px);column-gap:clamp(18px,3vw,44px);}
-  .sw-foot__inner>.sw-foot__b{grid-column:1/-1;}
-
-  /* shared pieces */
-  .sw-foot__logo{display:block;height:clamp(26px,3vw,40px);width:auto;}
-  .sw-foot__tagline{margin:12px 0 0;font-size:.92rem;line-height:1.5;opacity:.62;max-width:34ch;}
-  .sw-foot__headline{font-family:var(--sw-font-display);font-weight:500;margin:0;line-height:1;
-    letter-spacing:-.02em;font-size:clamp(1.9rem,5vw,3.6rem);max-width:20ch;}
-  .sw-foot__cols{display:grid;gap:clamp(18px,3vw,44px);width:100%;
-    grid-template-columns:repeat(auto-fit,minmax(min(100%,130px),1fr));}
-  .sw-foot__col h3{margin:0 0 14px;font-family:ui-monospace,Menlo,monospace;font-size:.68rem;
-    letter-spacing:.2em;text-transform:uppercase;opacity:.55;font-weight:600;}
-  .sw-foot__col .sw-act__links{flex-direction:column;gap:10px;}
-  .sw-foot__contact{display:flex;flex-direction:column;gap:8px;font-style:normal;opacity:.72;}
-  .sw-foot__contact a{color:inherit;text-decoration:none;}
-  .sw-foot__sub{margin:0 0 14px;font-family:var(--sw-font-display);font-weight:500;
-    font-size:clamp(1.1rem,2vw,1.5rem);}
-  .sw-foot__media{margin:0;border-radius:18px;overflow:hidden;clip-path:inset(0 0 100% 0);
-    transition:clip-path .9s cubic-bezier(.16,.84,.24,1) var(--sw-d,0s);}
-  .sw-foot.is-in .sw-foot__media{clip-path:inset(0 0 0 0);}
-  .sw-foot__media img{display:block;width:100%;object-fit:cover;transform:scale(1.08);
-    transition:transform 1.2s cubic-bezier(.16,.84,.24,1);}
-  .sw-foot.is-in .sw-foot__media img{transform:none;}
-  /* The CTA button takes the same magnetic offset the links do (.sw-btn has its
-     own transform rule, so it has to opt in explicitly). */
-  .sw-foot__b--cta .sw-btn{transform:translate(var(--sw-mx,0),var(--sw-my,0));}
-  .sw-foot__legal a{font-size:.78rem;opacity:.5;}
-  .sw-foot__social a{font-size:clamp(1rem,2.4vw,1.9rem);font-family:var(--sw-font-display);opacity:.85;}
-  /* The marquee is deliberately wider than the page, and a nowrap child's
-     intrinsic width would otherwise set the flex line's cross size — which in a
-     column variant drags every other block off to the right. Pin the block to
-     100% and clip inside it, so only the marquee overflows. */
-  .sw-foot__b--marquee{width:100%;max-width:100%;overflow:hidden;}
-  .sw-foot__marquee{display:flex;width:100%;white-space:nowrap;font-family:var(--sw-font-display);
-    font-size:clamp(2.4rem,10vw,8rem);line-height:1.05;letter-spacing:-.03em;opacity:.13;
-    user-select:none;pointer-events:none;}
-  .sw-foot__marquee span{animation:sw-marq 28s linear infinite;will-change:transform;}
-  @keyframes sw-marq{to{transform:translateX(-100%)}}
-
-  /* 1 minimal — one hairline row: mark, links, copyright */
-  .sw-foot--minimal .sw-foot__inner{border-top:1px solid color-mix(in srgb,currentColor 20%,transparent);
-    padding-top:clamp(22px,3vh,34px);}
-  /* 2 luxury — centred column, letter-spaced mark drifting on parallax */
-  .sw-foot--luxury{--sw-stagger:130ms;--sw-rise:34px;padding-block:clamp(90px,16vh,180px);text-align:center;}
-  .sw-foot--luxury .sw-foot__inner{flex-direction:column;align-items:center;gap:clamp(26px,4vh,52px);}
-  .sw-foot--luxury .sw-act__brand{display:block;font-size:clamp(1.3rem,3vw,2.3rem);
-    letter-spacing:.36em;text-indent:.36em;transform:translateY(calc(var(--sw-py,0) * -14px));}
-  .sw-foot--luxury .sw-foot__tagline{margin-inline:auto;}
-  /* 3 type — the wordmark is the layout */
-  .sw-foot--type{--sw-stagger:60ms;padding-block:clamp(60px,11vh,130px);}
-  .sw-foot--type .sw-foot__inner{flex-direction:column;align-items:stretch;gap:clamp(26px,4vh,52px);}
-  .sw-foot--type .sw-act__brand{display:block;font-size:clamp(3rem,14vw,11rem);line-height:.84;
-    letter-spacing:-.05em;}
-  .sw-foot--type .sw-foot__headline{font-size:clamp(2.6rem,11vw,9rem);letter-spacing:-.045em;max-width:none;}
-  /* 4 editorial — masthead: closing line, link columns, full-bleed image */
-  .sw-foot--editorial .sw-foot__b--headline{grid-column:1/9;}
-  .sw-foot--editorial .sw-foot__b--brand{grid-column:1/5;}
-  .sw-foot--editorial .sw-foot__b--columns{grid-column:6/-1;}
-  .sw-foot--editorial .sw-foot__b--legal{grid-column:1/6;}
-  .sw-foot--editorial .sw-foot__b--note{grid-column:7/-1;}
-  .sw-foot--editorial .sw-foot__headline{font-size:clamp(2.2rem,6vw,4.6rem);max-width:16ch;}
-  /* 5 split — two panels meeting at the centre line, arriving from opposite edges */
-  .sw-foot--split .sw-foot__b--brand{grid-column:1/6;--sw-sx:-40px;}
-  .sw-foot--split .sw-foot__b--columns{grid-column:7/-1;--sw-sx:40px;}
-  .sw-foot--split .sw-foot__b--links,.sw-foot--split .sw-foot__b--cta{grid-column:7/-1;--sw-sx:40px;}
-  .sw-foot--split .sw-foot__b--note{grid-column:1/7;}
-  .sw-foot--split .sw-foot__b--legal{grid-column:8/-1;}
-  /* 6 cta — the whole band is the ask */
-  .sw-foot--cta{--sw-pop:.96;background:color-mix(in srgb,var(--sw-accent) 18%,var(--sw-bg));
-    padding-block:clamp(80px,15vh,170px);text-align:center;}
-  .sw-foot--cta .sw-foot__inner{flex-direction:column;align-items:center;gap:clamp(24px,4vh,46px);}
-  .sw-foot--cta .sw-foot__headline{font-size:clamp(2.2rem,7vw,5.4rem);max-width:16ch;}
-  /* 7 product — the last look at the thing, masked in from the bottom */
-  .sw-foot--product .sw-foot__b--media{grid-column:1/6;}
-  .sw-foot--product .sw-foot__b--headline,.sw-foot--product .sw-foot__b--links,
-  .sw-foot--product .sw-foot__b--cta,.sw-foot--product .sw-foot__b--note,
-  .sw-foot--product .sw-foot__b--legal{grid-column:7/-1;}
-  /* 8 cinematic — end credits: dark band, drifting glow, mono links */
-  .sw-foot--cinematic{--sw-stagger:150ms;position:relative;background:#07080A;color:#E7E3DA;
-    padding-block:clamp(90px,16vh,180px);text-align:center;}
-  .sw-foot--cinematic::before{content:"";position:absolute;inset:0;pointer-events:none;
-    transform:translateY(calc(var(--sw-py,0) * 40px));
-    background:radial-gradient(60% 70% at 50% 40%,color-mix(in srgb,var(--sw-accent) 26%,transparent),transparent 72%);}
-  .sw-foot--cinematic .sw-foot__inner{position:relative;flex-direction:column;align-items:center;
-    gap:clamp(22px,4vh,44px);}
-  .sw-foot--cinematic .sw-act__links a{font-family:ui-monospace,Menlo,monospace;font-size:.74rem;
-    letter-spacing:.22em;text-transform:uppercase;}
-  /* 9 bento — every block is its own tile */
-  .sw-foot--bento .sw-foot__inner{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));
-    gap:clamp(10px,1.4vw,18px);align-items:stretch;}
-  .sw-foot--bento .sw-foot__inner>.sw-foot__b{--sw-pop:.94;--sw-rise:18px;grid-column:span 4;
-    border-radius:20px;padding:clamp(20px,2.6vw,34px);
-    background:color-mix(in srgb,currentColor 7%,transparent);}
-  .sw-foot--bento .sw-foot__inner>.sw-foot__b--brand,
-  .sw-foot--bento .sw-foot__inner>.sw-foot__b--headline,
-  .sw-foot--bento .sw-foot__inner>.sw-foot__b--media,
-  .sw-foot--bento .sw-foot__inner>.sw-foot__b--newsletter{grid-column:span 8;}
-  .sw-foot--bento .sw-foot__inner>.sw-foot__b--note,
-  .sw-foot--bento .sw-foot__inner>.sw-foot__b--legal{grid-column:span 6;}
-  /* 10 nav — a sitemap, done well */
-  .sw-foot--nav .sw-foot__b--brand{grid-column:1/4;}
-  .sw-foot--nav .sw-foot__b--columns{grid-column:5/-1;}
-  .sw-foot--nav .sw-foot__b--note{grid-column:1/7;}
-  .sw-foot--nav .sw-foot__b--legal{grid-column:8/-1;}
-  .sw-foot--nav .sw-act__links a span{padding-bottom:2px;background-repeat:no-repeat;
-    background-image:linear-gradient(currentColor,currentColor);background-size:0 1px;
-    background-position:0 100%;transition:background-size .3s;}
-  .sw-foot--nav .sw-act__links a:hover span{background-size:100% 1px;}
-  /* 11 social — the handles are the headline */
-  .sw-foot--social{--sw-stagger:110ms;padding-block:clamp(70px,12vh,140px);}
-  .sw-foot--social .sw-foot__inner{flex-direction:column;align-items:flex-start;gap:clamp(22px,4vh,46px);}
-  .sw-foot--social .sw-foot__social{gap:clamp(18px,3vw,44px);}
-  .sw-foot--social .sw-foot__social a{font-size:clamp(1.6rem,5vw,3.4rem);opacity:1;}
-  /* 12 newsletter — the field is the widest thing on the page */
-  .sw-foot--newsletter{padding-block:clamp(70px,13vh,150px);text-align:center;}
-  .sw-foot--newsletter .sw-foot__b--newsletter{grid-column:3/11;}
-  .sw-foot--newsletter .sw-act__form{margin-inline:auto;width:100%;}
-  .sw-foot--newsletter .sw-act__form input{flex:1;min-width:0;}
-  .sw-foot--newsletter .sw-foot__headline{margin-inline:auto;}
-  /* 13 story — a closing note, not a directory */
-  .sw-foot--story .sw-foot__b--brand,.sw-foot--story .sw-foot__b--headline{grid-column:1/6;}
-  .sw-foot--story .sw-foot__b--contact,.sw-foot--story .sw-foot__b--links,
-  .sw-foot--story .sw-foot__b--social{grid-column:7/-1;}
-  .sw-foot--story .sw-foot__tagline{font-size:1.02rem;max-width:44ch;opacity:.74;}
-  .sw-foot--story .sw-foot__headline{font-size:clamp(1.6rem,3vw,2.4rem);}
-  /* 14 interactive — oversized rows that sweep an accent fill on hover */
-  .sw-foot--interactive{--sw-stagger:70ms;padding-block:clamp(50px,9vh,110px);}
-  .sw-foot--interactive .sw-foot__inner{flex-direction:column;align-items:stretch;gap:clamp(20px,3vh,40px);}
-  .sw-foot--interactive .sw-act__links{flex-direction:column;gap:0;}
-  .sw-foot--interactive .sw-act__links a{position:relative;isolation:isolate;opacity:1;
-    font-family:var(--sw-font-display);font-size:clamp(1.5rem,4.4vw,3rem);line-height:1.15;
-    padding:clamp(10px,1.6vh,20px) clamp(12px,2vw,26px);
-    border-top:1px solid color-mix(in srgb,currentColor 22%,transparent);}
-  .sw-foot--interactive .sw-act__links a::before{content:"";position:absolute;inset:0;z-index:-1;
-    background:var(--sw-accent);transform:scaleX(0);transform-origin:0 50%;
-    transition:transform .4s cubic-bezier(.16,.84,.24,1);}
-  .sw-foot--interactive .sw-act__links a:hover::before{transform:scaleX(1);}
-  /* 15 experimental — off-grid on purpose */
-  .sw-foot--experimental{--sw-stagger:100ms;--sw-wrot:4deg;padding-block:clamp(60px,11vh,130px);}
-  .sw-foot--experimental .sw-foot__inner{flex-direction:column;align-items:flex-start;gap:clamp(18px,3vh,40px);}
-  .sw-foot--experimental .sw-foot__headline{font-size:clamp(2.4rem,10vw,7.5rem);letter-spacing:-.04em;
-    max-width:none;margin-left:clamp(-40px,-4vw,-8px);}
-  .sw-foot--experimental .sw-foot__b--social{margin-left:auto;}
-  .sw-foot--experimental .sw-foot__b--links{margin-left:clamp(20px,12vw,180px);}
-  /* 16 depth — layered planes on one perspective */
-  .sw-foot--depth{perspective:1200px;padding-block:clamp(70px,13vh,150px);}
-  .sw-foot--depth .sw-foot__inner{transform-style:preserve-3d;}
-  .sw-foot--depth .sw-foot__b--brand{--sw-z:calc(var(--sw-py,0) * -50px);}
-  .sw-foot--depth .sw-foot__b--headline{--sw-z:calc(var(--sw-py,0) * -20px);grid-column:1/9;}
-  .sw-foot--depth .sw-foot__b--links,.sw-foot--depth .sw-foot__b--cta{--sw-z:calc(var(--sw-py,0) * 30px);}
-  .sw-foot--depth .sw-act__brand{font-size:clamp(2rem,7vw,5rem);
-    text-shadow:0 20px 50px color-mix(in srgb,currentColor 22%,transparent);}
-
-  /* Phones: every variant collapses to one stacked column. Layout differences
-     between sixteen footers are a desktop luxury; on a 390px screen they are
-     sixteen ways to overflow. */
+  /* The footer stacks on a phone; on desktop it is one row.
+     .sw-act--footer carries the layout, the blocks are plain spans. */
   @media (max-width:860px){
-    .sw-foot__inner{display:flex!important;flex-direction:column!important;
-      align-items:flex-start!important;gap:clamp(20px,4vh,36px)!important;}
-    .sw-foot__inner>.sw-foot__b{width:100%;grid-column:auto!important;grid-row:auto!important;
-      margin-left:0!important;margin-right:0!important;}
-    .sw-foot--luxury,.sw-foot--cta,.sw-foot--cinematic,.sw-foot--newsletter{text-align:left;}
-    .sw-foot--luxury .sw-foot__tagline,.sw-foot--newsletter .sw-act__form,
-    .sw-foot--newsletter .sw-foot__headline{margin-inline:0;}
-    .sw-foot--bento .sw-foot__inner>.sw-foot__b{padding:clamp(16px,4vw,24px);}
-    .sw-foot--depth{perspective:none;}
-  }
-
-  /* Reduced motion: the footer is simply there. The observer is skipped in JS,
-     so these only have to undo the resting state. */
-  @media (prefers-reduced-motion:reduce){
-    .sw-foot__b,.sw-foot__w,.sw-foot__media,.sw-foot__media img{opacity:1!important;
-      transform:none!important;clip-path:none!important;transition:none!important;}
-    .sw-foot__marquee span{animation:none;}
+    .sw-act--footer{flex-direction:column;align-items:flex-start;gap:clamp(16px,4vh,28px);}
   }
   `;
   // Wrap in a cascade layer so the page's own theme tokens (unlayered

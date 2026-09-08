@@ -4,7 +4,7 @@
 # Run this BEFORE promising a mobile app. Prints one of:
 #   FLUTTER   — Flutter SDK usable            -> platforms/flutter/
 #   ANDROID   — Android SDK, no Flutter       -> platforms/android/
-#   BOTH      — either is available           -> ask the user which
+#   BOTH      — both are available            -> ask the user which
 #   NONE      — neither                       -> tell the user, offer the website
 #
 # Why the paths and not just `which`: an Android SDK installed by Android Studio

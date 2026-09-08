@@ -7,7 +7,7 @@ says so.*
 [`art-direction/looks.md`](../art-direction/looks.md) ·
 [`animation/camera.md`](../animation/camera.md) ·
 [`animation/scene-planning.md`](../animation/scene-planning.md) ·
-[`sections/acts.md`](../sections/acts.md) · [`footer/workflow.md`](../footer/workflow.md)
+[`sections/acts.md`](../sections/acts.md)
 
 ---
 
@@ -111,27 +111,6 @@ collect the copy for each option chosen. Options, ordering and the continuity ru
 
 "Film only" is a legitimate answer — but it must be the user's answer, not your default.
 
-## 6a. Product sections — always propose at least five, reasoned from this product
-
-Once the chapter plan exists you know what the film already shows, and can propose the
-**premium, motion-driven sections that would make this particular product feel complete** —
-anatomy, material, craft, features, interactive showcase, story. Never the same list twice:
-they are reasoned from the product, the industry, the references and the chapters, then
-offered as a **multi-select checklist** the user picks from.
-
-**Read [`sections/product-sections/workflow.md`](../sections/product-sections/workflow.md)
-before proposing anything**; the reasoning is in
-[`selection-rules.md`](../sections/product-sections/selection-rules.md) and the seed
-catalogue in [`section-library.md`](../sections/product-sections/section-library.md).
-Record as `PRODUCT_SECTIONS[]`. "None" is a legitimate answer; not asking is not.
-
-## 6b. The footer — two questions, whenever the page has one
-
-A footer is appended whenever anything follows the film; a page that ends mid-panel reads
-as broken. Which footer is a real question with a real answer — never pick one silently.
-The variant question, the contents question and how the answer reaches the engine:
-[`footer/workflow.md`](../footer/workflow.md).
-
 ## 7. Mobile
 
 Desktop only, or a native 9:16 portrait chain as well (roughly doubles the video workload —
@@ -181,10 +160,6 @@ file**. Two documents, no overlap. Both stay short enough to skim.
   `align` (left/right/centre — alternate them), `accent`.
 - `ACTS` — the page after the film: any of statement / cards / cta / footer / reviews /
   testimonials / animated / custom / none. **Multi-select, always asked.**
-- `PRODUCT_SECTIONS[]` — the product-specific animated sections the user picked from the
-  five-or-more you proposed, each with its `pattern`, its assets and its rung in the page.
-  **Always proposed, reasoned per product, never a fixed list**
-  ([`sections/product-sections/`](../sections/product-sections/workflow.md)).
 - `MOBILE` — desktop only | + native 9:16 chain. (Forced to 9:16 when `TARGET` = app.)
 - `ASSET_SOURCE` — automatic (a connected tool renders) | manual (the pack is the
   deliverable).

@@ -39,47 +39,16 @@ export type QSTone = 'dark' | 'light' | 'tint';
 export type QSLink = { label: string; href?: string };
 
 /**
- * The sixteen footer variants. The slug picks the layout AND the motion recipe —
- * see footer/variants.md for what each looks like and when to use it.
- */
-export type QSFooterVariant =
-  | 'minimal' | 'luxury' | 'type' | 'editorial' | 'split' | 'cta'
-  | 'product' | 'cinematic' | 'bento' | 'nav' | 'social' | 'newsletter'
-  | 'story' | 'interactive' | 'experimental' | 'depth';
-
-/**
- * Every content key is optional and independent: a key you omit renders no
- * element at all, so it can never leave a gap in the variant's layout. Blocks
- * always appear in source order (brand, headline, marquee, media, columns,
- * links, social, contact, newsletter, cta, custom, legal, note) — the variant
- * re-places them in CSS.
+ * A closing band: wordmark, a link row, a note. Every key is optional — one you
+ * omit renders no element, and a footer with none of them renders nothing.
  */
 export interface QSFooter {
   kind: 'footer';
-  /** Defaults to 'minimal'. Ask the user; do not pick silently. */
-  variant?: QSFooterVariant;
   tone?: QSTone;
   id?: string;
-  /** Wordmark. Use `logo` instead for an image mark. */
   brand?: string;
-  logo?: string;
-  tagline?: string;
-  /** The footer's own closing line. Word-animated in type/editorial/cta/experimental. */
-  headline?: string;
   links?: QSLink[];
-  columns?: Array<{ title?: string; links?: QSLink[] }>;
-  social?: QSLink[];
-  contact?: QSLink[];
-  newsletter?: { title?: string; placeholder?: string; action?: { label: string } };
-  /** Accepts the bare shape as well as the {primary,secondary} one. */
-  cta?: { label: string; href?: string } | QSChapter['cta'];
-  legal?: QSLink[];
   note?: string;
-  media?: string;
-  mediaAlt?: string;
-  marquee?: string;
-  /** Verbatim markup, for anything the keys above don't cover. */
-  html?: string;
 }
 
 export interface QSConfig {

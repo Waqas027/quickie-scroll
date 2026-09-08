@@ -74,32 +74,6 @@
 - **Copy sits in the same corner for the whole film** → `align` was never set. Alternate it.
 - **The page ends abruptly at the last frame** → no `acts`. Ask; don't default to film-only
   ([`sections/acts.md`](../sections/acts.md)).
-- **The footer is a plain row of links** → no `variant` on the footer act, so it fell back
-  to `minimal`. The footer question is a real question with a real answer
-  ([`footer/workflow.md`](../footer/workflow.md)); the sixteen variants are in
-  [`footer/variants.md`](../footer/variants.md).
-- **A footer block escapes its padding box, or the page scrolls sideways on a phone** → a
-  tile without `box-sizing: border-box`, a marquee without `width:100%` + clip, or a grid
-  track defined with `minmax(auto, …)` instead of `minmax(0, 1fr)`. All three let wide
-  content expand the track.
-
-## Product sections → [`sections/product-sections/`](../sections/product-sections/workflow.md)
-
-- **The same five sections were suggested as on the last build** → the eleven signals were
-  never read. The list is reasoned from the product, not recalled
-  ([`selection-rules.md`](../sections/product-sections/selection-rules.md)).
-- **A section repeats a scene the film already showed** → the anti-duplication pass was
-  skipped. Check each candidate against `CHAPTERS[]` by beat, not by title.
-- **The page feels like one long section** → every product section used the same
-  reveal-and-stagger. Vary the pattern across the set
-  ([`animation-patterns.md`](../sections/product-sections/animation-patterns.md)).
-- **The film's scrub stutters once the sections exist** → a section pinned or scrubbed
-  inside the film's scroll range. Product sections live strictly below it
-  ([`core/rules.md`](../core/rules.md) §9).
-- **A section asked for four new images** → section imagery comes out of the rendered clips
-  with ffmpeg first; a new generation is declared and approved, never assumed
-  ([`workflow.md`](../sections/product-sections/workflow.md) → *assets*).
-
 ## Phone and iOS → [`validation/qa-checklist.md`](qa-checklist.md)
 
 - **Blank / black scene on iOS, fine on desktop** → a muted video that was never played

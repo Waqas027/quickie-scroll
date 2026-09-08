@@ -48,6 +48,6 @@ translates directly. Suggest it unprompted when the budget reads tight.
 - **Seamless at every seam.** Judged by composition, not PSNR.
 - **The user's product, unchanged**, in every frame that contains it.
 - **A page, not a hero** — unless the user chose film-only. The film hands over to the acts
-  with no hard rule and no colour jump, and ends on a footer the user actually picked.
+  with no hard rule and no colour jump, and ends on a footer.
 - **Alive on a phone.** Reduced motion falls back to stills; a throttled phone scrubs
   without freezing.

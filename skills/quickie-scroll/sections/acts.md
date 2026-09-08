@@ -4,8 +4,7 @@
 [`discovery/interview.md`](../discovery/interview.md) question 6; rendered by the engine's
 `acts` array.*
 
-**Read with:** [`footer/workflow.md`](../footer/workflow.md) ·
-[`platforms/web/engine-config.md`](../platforms/web/engine-config.md) ·
+**Read with:** [`platforms/web/engine-config.md`](../platforms/web/engine-config.md) ·
 [`platforms/web/nextjs.md`](../platforms/web/nextjs.md)
 
 ---
@@ -30,23 +29,13 @@ available) and collect the copy for each one chosen:
 | Nothing — end at the film | — | A pure hero. |
 
 A footer is appended whenever anything follows the film — a page that ends mid-panel reads
-as broken — unless they picked "nothing". Which footer is its own question:
-[`footer/workflow.md`](../footer/workflow.md). Never pick one silently.
+as broken — unless they picked "nothing". It is a closing band: wordmark, link row, note.
 
 "Film only" is a legitimate answer — but it must be the user's answer, not your default.
 
-## The product's own sections are a separate question
-
-The acts above are the *argument*. The sections that keep working the **product** itself —
-anatomy, material, craft, feature expansion, interactive showcase, story — are proposed
-separately at interview question 6a, reasoned per product rather than picked from a menu,
-and they sit **between the film and the acts**:
-[`product-sections/workflow.md`](product-sections/workflow.md).
-
 ## Order them so the page descends from image to argument to ask
 
-**product sections → statement → reviews or testimonials → cards → animated section → cta →
-footer.**
+**statement → reviews or testimonials → cards → animated section → cta → footer.**
 
 Say the order back; it's easier to correct now than after the copy is written.
 
@@ -61,12 +50,11 @@ is what makes a site feel like two sites glued together.
 
 An "additional animated section" is CSS or Framer Motion **below** the film — never a
 second scrubbed video, and never a second scroll driver over the film's scroll range
-([`core/rules.md`](../core/rules.md) §9). The footer's own motion is built into the engine
-and needs nothing extra ([`footer/motion.md`](../footer/motion.md)).
+([`core/rules.md`](../core/rules.md) §9).
 
 ## Where they land in the engine
 
 Four built-in kinds — `statement`, `cards`, `cta`, `footer` — plus
-`{ kind: 'html', tone, html }`, which is where reviews, testimonials, product sections, a
-second animated section and any custom section land. No engine change is needed for any of
+`{ kind: 'html', tone, html }`, which is where testimonials, a second animated section and
+any custom section land (reviews reuse `cards`). No engine change is needed for any of
 them. Config shapes: [`platforms/web/engine-config.md`](../platforms/web/engine-config.md).

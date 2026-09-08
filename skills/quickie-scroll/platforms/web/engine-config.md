@@ -5,7 +5,7 @@
 [`engine/quickie-scroll.js`](../../engine/quickie-scroll.js).*
 
 **Read with:** [`animation/scene-planning.md`](../../animation/scene-planning.md) ·
-[`sections/acts.md`](../../sections/acts.md) · [`footer/workflow.md`](../../footer/workflow.md)
+[`sections/acts.md`](../../sections/acts.md)
 
 ---
 
@@ -27,26 +27,14 @@ automatically. **Alternate it** — see
 ## `acts` — the editorial page after the film
 
 The film's chrome fades out as they arrive. Four built-in kinds — `statement`, `cards`,
-`cta`, `footer` — plus `{ kind:'html', tone, html }`, which is where reviews, testimonials,
-product sections ([`sections/product-sections/`](../../sections/product-sections/workflow.md)),
-a second animated section and any custom section land; no engine change needed.
+`cta`, `footer` — plus `{ kind:'html', tone, html }`, which is where testimonials,
+a second animated section and any custom section land (reviews reuse `cards`); no engine
+change needed.
 
 Give every act the film's palette, type and accent, and let the first one sit directly on
 the last frame: a hard rule or a colour jump at that boundary is what makes a site feel
 like two sites glued together. Options and ordering:
 [`sections/acts.md`](../../sections/acts.md).
-
-## `variant` on the footer act
-
-The sixteen-variant footer library ([`footer/variants.md`](../../footer/variants.md), chosen
-at interview question 6b). The slug drives layout *and* motion: reveal-on-entry, per-block
-stagger, word-split headlines, parallax drift, clip-path image reveals, marquee, magnetic
-hover, depth planes — all built in, all reduced-motion aware. The footer's own motion needs
-no Framer Motion.
-
-```js
-{ kind: 'footer', variant: 'luxury', tone: 'dark', /* content keys */ }
-```
 
 ## Pacing — `scroll` and `linger`
 
