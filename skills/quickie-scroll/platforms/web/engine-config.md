@@ -5,7 +5,7 @@
 [`engine/quickie-scroll.js`](../../engine/quickie-scroll.js).*
 
 **Read with:** [`animation/scene-planning.md`](../../animation/scene-planning.md) ·
-[`sections/acts.md`](../../sections/acts.md)
+[`sections/post-film.md`](../../sections/post-film.md)
 
 ---
 
@@ -24,17 +24,23 @@ Which side of the frame each chapter speaks from. The readability scrim follows 
 automatically. **Alternate it** — see
 [`animation/scene-planning.md`](../../animation/scene-planning.md).
 
-## `acts` — the editorial page after the film
+## `acts` — the post-film sections
+
+The wire format for the page after the film. The concept is *4–5 designed sections plus a
+mandatory footer*, decided by the skill and never asked
+([`sections/post-film.md`](../../sections/post-film.md)); `acts` is just the array they land
+in. Don't rename the key — the CSS classes and the `.d.ts` depend on it.
 
 The film's chrome fades out as they arrive. Four built-in kinds — `statement`, `cards`,
-`cta`, `footer` — plus `{ kind:'html', tone, html }`, which is where testimonials,
-a second animated section and any custom section land (reviews reuse `cards`); no engine
-change needed.
+`cta`, `footer` — plus `{ kind:'html', tone, html }`. **`html` is where most sections land**:
+a product showcase, a configurator, a map, a gallery, a comparison, an interactive lineup —
+markup rendered by a React component in the Next build. No engine change needed for any of
+it. A config that uses only `statement` / `cards` / `cta` is the signature of a generic
+plan, not of a well-configured engine.
 
-Give every act the film's palette, type and accent, and let the first one sit directly on
-the last frame: a hard rule or a colour jump at that boundary is what makes a site feel
-like two sites glued together. Options and ordering:
-[`sections/acts.md`](../../sections/acts.md).
+Give every section the film's palette, type and accent, and let the first one sit directly
+on the last frame: a hard rule or a colour jump at that boundary is what makes a site feel
+like two sites glued together. The footer is always present and always last.
 
 ## Pacing — `scroll` and `linger`
 

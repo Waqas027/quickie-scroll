@@ -47,7 +47,26 @@ translates directly. Suggest it unprompted when the budget reads tight.
   architecture.
 - **Seamless at every seam.** Judged by composition, not PSNR.
 - **The user's product, unchanged**, in every frame that contains it.
-- **A page, not a hero** — unless the user chose film-only. The film hands over to the acts
-  with no hard rule and no colour jump, and ends on a footer.
+- **A page, not a hero.** The film hands over to 4–5 designed sections with no hard rule and
+  no colour jump, and ends on a footer.
 - **Alive on a phone.** Reduced motion falls back to stills; a throttled phone scrubs
   without freezing.
+
+## The post-film page clears the same bar as the film
+
+The sections after the last frame are judged as part of the same piece, not as a website
+appended to a film. Full procedure: [`sections/post-film.md`](../sections/post-film.md).
+
+- **4 or 5 sections, plus a mandatory footer.** Never fewer, never eight.
+- **Each was chosen, not defaulted.** Every section answers "why is this here, for *this*
+  subject?" with something better than "sites usually have one". A plan that reads
+  statement → cards → testimonials → CTA has failed this bar on sight.
+- **The first section inherits the last frame** — palette, type, grain, light direction,
+  spacing, motion language. No boundary a visitor could point at and say the film ended.
+- **Nothing generic.** No Bootstrap cards, no ordinary Tailwind grids, no
+  heading-paragraph-three-cards, no stock testimonials, no repeated card grids dominating
+  the page.
+- **Motion is intentional either way.** Framer Motion / Motion for the major interactive
+  sections; a still section has a stated reason to be still.
+- **Nothing fabricated.** Real entities stay real, demo data is labelled, supplied
+  references are used before anything sourced ([`rules.md`](rules.md) §13).

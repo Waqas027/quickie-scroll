@@ -134,7 +134,7 @@ gesture pill.
   the background, the asset path in `Chapter.frameDir` is wrong — `AssetManager` throws and
   the scaffold swallows it via `runCatching`, so a wrong path fails silently by design
   (a missing frame mid-scroll must not crash the film).
-- **Scroll past the film into the acts.** The pinned copy and HUD must disappear and the
+- **Scroll past the film into the post-film sections.** The pinned copy and HUD must disappear and the
   film must dim — that handover is the `past` flag.
 - **Low-end device.** If scrubbing is choppy on a budget phone, drop the extraction to
   8 fps before touching anything in the code.

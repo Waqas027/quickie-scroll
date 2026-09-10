@@ -5,9 +5,9 @@ websites and Flutter or native-Android apps — where the visitor's scroll drive
 camera through a photoreal world.
 
 Scroll sets the playhead of a pre-rendered continuous camera move, so the camera genuinely
-travels and scroll only drives time. Chapters of copy pin over the film; an editorial page
-scrolls up over the last frame. It's the technique behind Apple's scroll-through product
-pages, made repeatable.
+travels and scroll only drives time. Chapters of copy pin over the film; a page the skill
+designs itself scrolls up over the last frame. It's the technique behind Apple's
+scroll-through product pages, made repeatable.
 
 ## Install
 
@@ -72,7 +72,7 @@ offers to build the website instead. It will not scaffold an app you can't compi
 
 Why Next.js rather than a single HTML file: the film is pre-rendered, so no library
 improves it — but Lenis smooth scroll transforms how the scrub *feels* (native wheel scroll
-arrives in coarse steps), and the acts after the film benefit from Framer Motion, component
+arrives in coarse steps), and the sections after the film benefit from Framer Motion, component
 reuse and `next/font`. The engine stays vanilla JS and returns a `{ destroy }` handle, so
 the React wrapper is about fifteen lines.
 
@@ -133,19 +133,28 @@ not. Drop in Pinterest boards, Dribbble shots or screenshots and they're read as
 — palette, type, composition, grade, motion pace — extracted into the prompts and then set
 aside, never used as a conditioning image.
 
-## Sections chosen for *your* product
+## The page after the film — designed, not asked
 
-After the chapter plan is agreed, the skill reasons about the actual product — its type,
-industry, positioning, references and the scenes the film already covers — and proposes **at
-least five premium animated sections** that would suit that specific project, as a checklist
-you pick from. A perfume gets bottle anatomy, glass macro, an ingredient story; a car gets
-exterior reveal, interior, performance figures; a SaaS product gets feature expansion, an
-interactive explorer and use-cases. Never the same list twice, never a static text block —
-each one is a motion beat (pin-and-advance, clip-path reveal, layer separation, horizontal
-rail, hotspots) placed in the narrative between the film and the editorial acts.
+You are never handed a checklist of *statement / cards / testimonials / CTA*. The skill
+acts as creative director: it reads the subject, the product, the audience, the look, the
+palette, the references and the scenes the film already covers, and designs **4–5 premium
+sections specific to that project, plus a mandatory context-aware footer**.
 
-Their imagery comes out of the rendered clips with ffmpeg wherever possible, so the product
-in a detail section is frame-exact against the product in the film.
+A perfume gets scent notes, an ingredient source story, bottle anatomy. A burger brand gets
+a signature lineup, a flavour story, animated reviews, an order moment. A travel site gets
+destination discovery, experiences, stays, a journey builder. Never the same set twice, and
+never heading-paragraph-three-cards.
+
+Each section arrives with a reason to exist, an interaction model and a motion approach,
+written into `README.md` before it is built. The first one inherits the film's palette,
+grain and light direction from its **actual final frame**, so the page reads as one
+continuous experience rather than a video with a landing page bolted underneath. Its
+imagery comes out of the rendered clips with ffmpeg wherever possible, so the product in a
+detail section is frame-exact against the product in the film.
+
+Real-world material stays real: supplied references first, sourced assets only where they
+genuinely help, no invented places, businesses or specifications, and demo data labelled as
+demo data.
 
 ## How the skill is organised
 
@@ -161,7 +170,7 @@ skills/quickie-scroll/
   animation/            scene-planning.md · chain.md · camera.md
   image/                start-frame.md
   video/                prompt-pack.md · prompting.md · continuity.md · rendering.md
-  sections/             acts.md
+  sections/             post-film.md
   platforms/            web/ · flutter/ · android/
   engine/               quickie-scroll.js
   pipeline/             scripts.md · encoding.md · backends.md
@@ -180,9 +189,9 @@ An improved version of [`lets-scroll`](https://github.com/AIwithhassan/lets-scro
 does the core thing: scroll scrubs a pre-rendered clip chain in a single HTML file.
 
 This plugin adds an interview, a seven-look art-direction library, a seven-block
-image-to-video prompt pack, one start image per build instead of one per scene, an editorial
-page after the film, Flutter and native-Android targets with a toolchain probe, and a
-Next.js scaffold with a React wrapper and a `destroy()` handle.
+image-to-video prompt pack, one start image per build instead of one per scene, an
+autonomously designed page after the film, Flutter and native-Android targets with a
+toolchain probe, and a Next.js scaffold with a React wrapper and a `destroy()` handle.
 
 ## License
 

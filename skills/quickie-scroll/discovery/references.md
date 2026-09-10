@@ -78,7 +78,7 @@ and read them for **what to name in the prompts and the page**, not to copy:
 | Composition, negative space, scale | the image prompt's composition line; `align` per chapter |
 | Grade, light direction, lens feel | the `PREAMBLE` and the STYLE TAIL |
 | Motion feel (from a video reference) | the CAMERA block's move and pace |
-| Layout, section rhythm | the `acts` after the film |
+| Layout, section rhythm | the post-film sections ([`sections/post-film.md`](../sections/post-film.md)) |
 
 Write the extraction down in `README.md` as a short table — *"from ref 2: the type pairing
 and the ink-on-paper contrast; from ref 3: the half-orbit pace"* — so the build is

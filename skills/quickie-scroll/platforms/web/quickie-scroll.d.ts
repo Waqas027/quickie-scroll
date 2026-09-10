@@ -32,6 +32,11 @@ export type QSAct =
   | { kind: 'cards'; tone?: QSTone; id?: string; title?: string; cards: Array<{ title: string; body?: string; tone?: 'dark' | 'light' }> }
   | { kind: 'cta'; tone?: QSTone; id?: string; title: string; body?: string; placeholder?: string; action?: { label: string; href?: string } }
   | QSFooter
+  /**
+   * Where most designed post-film sections land. `html` is set via innerHTML, so for an
+   * interactive or animated section pass `html: ''` plus an `id` and portal a client
+   * component into the slot — see platforms/web/nextjs.md.
+   */
   | { kind: 'html'; tone?: QSTone; id?: string; html: string };
 
 export type QSTone = 'dark' | 'light' | 'tint';

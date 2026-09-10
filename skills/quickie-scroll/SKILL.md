@@ -4,8 +4,12 @@ description: >
   Build cinematic scroll-driven product experiences — Next.js websites and Flutter or
   native-Android apps — where the visitor's scroll drives a real camera through a photoreal
   world. Scroll sets the playhead of a pre-rendered continuous camera move, so the camera
-  genuinely travels and scroll only drives time; chapters of copy pin over it, and an
-  editorial page scrolls up over the finished film. Generates exactly one start image —
+  genuinely travels and scroll only drives time; chapters of copy pin over it, and the rest
+  of the site scrolls up over the finished film. Never asks which sections come after the
+  film — it acts as creative director and designs four or five premium, concept-specific
+  sections plus a mandatory context-aware footer from the subject, the look and the
+  references, so the film evolves into a complete site rather than being followed by a
+  generic landing page. Generates exactly one start image —
   every later scene is conditioned on the previous clip's actual last frame — and writes
   each clip prompt in a fixed seven-block form built for image-to-video models rather than
   for cinematic prose. Locks a user-supplied product as the visual anchor, sorts design
@@ -17,7 +21,7 @@ description: >
   connected MCP/CLI when one is available, or hands over the prompt pack when not. Use when
   the user wants a scroll cinematic, an Apple-style scroll-through product page, a "fly
   through the world" hero, an immersive brand site, or a scroll-driven mobile app.
-allowed-tools: Bash, Read, Write, Edit, AskUserQuestion, Skill
+allowed-tools: Bash, Read, Write, Edit, AskUserQuestion, WebSearch, WebFetch, Skill
 ---
 
 # quickie-scroll
@@ -71,14 +75,14 @@ running the step, not after.
 | Step | What happens | Read first |
 |---|---|---|
 | **0** | Bootstrap — ffmpeg, renderer probe, app-toolchain probe | [`core/bootstrap.md`](core/bootstrap.md) |
-| **1** | Interview — references, target, subject, look, camera, chapters, acts, mobile, asset source | [`discovery/interview.md`](discovery/interview.md) |
+| **1** | Interview — references, target, subject, look, camera, chapters, mobile, asset source | [`discovery/interview.md`](discovery/interview.md) |
 | **2** | State the chained workflow to the user, then write the prompt pack | [`core/rules.md`](core/rules.md) → [`video/prompt-pack.md`](video/prompt-pack.md) |
 | **3** | The one start frame | [`image/start-frame.md`](image/start-frame.md) |
 | **4** | Rendering — who renders, at what cost | [`video/rendering.md`](video/rendering.md) |
 | **5** | The seamless chain — architecture A or B | [`animation/chain.md`](animation/chain.md) |
 | **6** | The manual handoff — the per-clip loop | [`project/handoff-loop.md`](project/handoff-loop.md) |
 | **7** | Encode for scrubbing | [`pipeline/encoding.md`](pipeline/encoding.md) |
-| **8** | Assemble — Next.js, Flutter or Android | [`platforms/`](platforms/) |
+| **8** | Design the post-film page, then assemble — Next.js, Flutter or Android | [`platforms/`](platforms/) |
 | **9** | QA | [`validation/qa-checklist.md`](validation/qa-checklist.md) |
 
 ### Step 0 — Bootstrap
@@ -96,8 +100,11 @@ prompt. → [`discovery/interview.md`](discovery/interview.md), which routes to
 [`discovery/references.md`](discovery/references.md),
 [`art-direction/looks.md`](art-direction/looks.md),
 [`animation/camera.md`](animation/camera.md),
-[`animation/scene-planning.md`](animation/scene-planning.md),
-[`sections/acts.md`](sections/acts.md).
+[`animation/scene-planning.md`](animation/scene-planning.md).
+
+**What follows the film is not asked.** No section multi-select, no "film only", no "do you
+want a footer?" — the skill designs 4–5 sections plus a mandatory footer from the subject
+and the look. → [`sections/post-film.md`](sections/post-film.md)
 
 Close the interview by writing `README.md` and `brief.md` before a single prompt file
 exists. → [`project/documents.md`](project/documents.md)
@@ -149,12 +156,20 @@ Scrubbing sets `currentTime` every frame, so seek cost is the only thing that ma
 native resolution, crf ≤ 20, small GOP (`-g 8`), `+faststart`, no audio. Portrait and
 app-target frame sequences differ. → [`pipeline/encoding.md`](pipeline/encoding.md)
 
-### Step 8 — Assemble
+### Step 8 — Design the post-film page, then assemble
+
+The film is one half of the deliverable. Before scaffolding, look at the film's **real last
+frame** and confirm the post-film plan drafted at Step 1 against it: **4–5 designed sections
+plus a mandatory footer**, each with a reason to exist for this subject, the first one
+inheriting the last frame's palette, light and motion direction. Never the default
+statement → cards → testimonials → CTA. → [`sections/post-film.md`](sections/post-film.md)
+
+Then build:
 
 - **Web** — scaffold a **Next.js App Router project**, not a single HTML file. Engine,
   wrapper, types, Lenis smooth scroll and the two hard rules:
   [`platforms/web/nextjs.md`](platforms/web/nextjs.md). Engine config — chapters, `hud`,
-  `align`, `acts`, `scroll`/`linger` pacing:
+  `align`, post-film sections, `scroll`/`linger` pacing:
   [`platforms/web/engine-config.md`](platforms/web/engine-config.md).
 - **App** — per the Step 0 probe: [`platforms/flutter/flutter.md`](platforms/flutter/flutter.md)
   or [`platforms/android/android.md`](platforms/android/android.md). Both scrub a
@@ -162,7 +177,7 @@ app-target frame sequences differ. → [`pipeline/encoding.md`](pipeline/encodin
 
 ### Step 9 — QA
 
-Do not skip. Seams, scrubbing, the handover to the acts, reduced motion, phone. → [`validation/qa-checklist.md`](validation/qa-checklist.md)
+Do not skip. Seams, scrubbing, the handover to the post-film page, reduced motion, phone. → [`validation/qa-checklist.md`](validation/qa-checklist.md)
 
 When something is wrong, the symptom → cause index is
 [`validation/troubleshooting.md`](validation/troubleshooting.md).
@@ -190,7 +205,7 @@ Where to change what. One domain, one folder, one source of truth.
 | The seven-block clip prompt and its rules | `video/prompting.md` |
 | Writing clip *n* from clip *n−1*; connector prompts | `video/continuity.md` |
 | Renderer choice, cost, spend approval | `video/rendering.md` |
-| The editorial page after the film | `sections/acts.md` |
+| The page after the film — how it is designed | `sections/post-film.md` |
 | Next.js scaffold, React wrapper, engine config | `platforms/web/` |
 | The Flutter or Android app target | `platforms/flutter/`, `platforms/android/` |
 | The scrub engine itself | `engine/quickie-scroll.js` |
@@ -202,7 +217,7 @@ Where to change what. One domain, one folder, one source of truth.
 ## Files that are copied into a build
 
 - [`engine/quickie-scroll.js`](engine/quickie-scroll.js) — the scrub engine (chain,
-  blob-seek, crossfades, pinned copy, HUD, alignment, acts, route rail, reduced motion,
+  blob-seek, crossfades, pinned copy, HUD, alignment, post-film sections, route rail, reduced motion,
   phone hardening). Returns a `{ destroy }` handle for
   component frameworks.
 - [`platforms/web/QuickieScroll.tsx`](platforms/web/QuickieScroll.tsx) +

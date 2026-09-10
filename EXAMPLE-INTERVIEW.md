@@ -109,23 +109,43 @@ Copy rules that keep it from reading as a template:
 
 ---
 
-## Q6. The page after the film — multi-select
+## Not a question — the page after the film
 
-> A scroll cinematic on its own is a hero, not a product site. What comes after it?
-> Pick as many as you want:
->
-> - **Statement** — one paragraph of positioning under the film.
-> - **Cards** — notes (top/heart/base), the range, or the story in three panels.
-> - **Testimonials / press** — pull quotes.
-> - **CTA** — buy, book a consultation, join the list.
-> - **Footer** — brand, links, note.
-> - **Film only** — legitimate, but it has to be *your* answer, not my default.
+The user is **never** asked what follows the film. No multi-select, no "film only", no "do
+you want a footer?". The skill designs it: **4–5 premium sections specific to this project,
+plus a mandatory context-aware footer**
+([`sections/post-film.md`](skills/quickie-scroll/sections/post-film.md)).
 
-The skill collects the actual copy for each one chosen, not just the checkbox.
+For the perfume brand above, having established a warm-craft film that ends on the bottle
+in a lit room, the reasoning runs:
+
+- **Primary action** — buy, but a fragrance is bought on evocation, not specification.
+- **Content opportunity** — the notes and the source of the raw material; the film showed
+  the making but never named anything.
+- **Visual opportunity** — the bottle deserves an interactive detail moment; the raw
+  materials deserve a gallery with real depth.
+
+And the plan that comes out of it:
+
+| # | Section | Why it's here | Motion |
+|---|---------|---------------|--------|
+| 01 | **Olfactory pyramid** | The film evoked the scent; this is the first moment it can be *described*. Top/heart/base revealed as the visitor scrolls through the composition. | Scroll-linked layer separation, Framer Motion |
+| 02 | **Source story** | The film opened on raw material without naming it. Real origins, real growers. | Horizontal rail, masked image reveals |
+| 03 | **Bottle anatomy** | Glass, weight, the stopper — the tactile argument for the price. | Hover hotspots, spring scale |
+| 04 | **The collection** | Three other scents; the visitor who liked this one needs somewhere to go. | Staggered entrance, static compositions |
+| 05 | **Acquire** | The ask, sized to a considered purchase — not a newsletter bar. | Subtle reveal |
+| — | **Footer** | Wordmark, stockists, contact. No newsletter — this brand sells through stockists, so it would be a dead affordance. | Subtle reveal |
+
+Section 01 opens on the same warm practical light and film grain the last frame ends on, so
+the page never announces that the video finished. The plan goes into `README.md` under
+**After the film** before anything is built, and the user can push back on it there.
+
+There is deliberately no "statement → cards → testimonials → CTA" in that list. If a plan
+comes out looking like that, it was defaulted rather than designed.
 
 ---
 
-## Q7. Mobile
+## Q6. Mobile
 
 > Desktop only, or a native 9:16 portrait chain as well? A portrait chain roughly doubles
 > the video workload.
@@ -135,7 +155,7 @@ either way — that isn't a "mobile version", it's the page not breaking when a 
 
 ---
 
-## Q8. Asset source — how the video actually gets made
+## Q7. Asset source — how the video actually gets made
 
 > **Automatic** — I render it here through a connected tool. I'll give you the estimated
 > spend and wait for a go before anything renders.
@@ -164,6 +184,8 @@ No overlap, both short enough to skim.
 ## What the interview must have captured
 
 `REFS` · `TARGET` · `APP_STACK` · `SUBJECT` · `BRAND_NAME` · `TONE` · `LOOK` · `PALETTE` ·
-`N` · `CAMERA` · `CHAPTERS[]` · `ACTS` · `MOBILE` · `ASSET_SOURCE`
+`N` · `CAMERA` · `CHAPTERS[]` · `MOBILE` · `ASSET_SOURCE`
+
+Plus `POST_FILM[]` — the 4–5 sections and the footer, derived rather than asked.
 
 If any of those is still blank, the interview isn't finished.

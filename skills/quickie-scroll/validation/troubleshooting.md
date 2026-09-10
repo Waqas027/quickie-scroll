@@ -72,8 +72,22 @@
 ## The page → [`platforms/web/engine-config.md`](../platforms/web/engine-config.md)
 
 - **Copy sits in the same corner for the whole film** → `align` was never set. Alternate it.
-- **The page ends abruptly at the last frame** → no `acts`. Ask; don't default to film-only
-  ([`sections/acts.md`](../sections/acts.md)).
+- **The page ends abruptly at the last frame** → no post-film sections. Don't ask the user
+  what they want there — design 4–5 and a footer
+  ([`sections/post-film.md`](../sections/post-film.md)).
+- **The film ends and a different website starts** → section 01 didn't inherit the last
+  frame. Match its palette, grain, light direction and spacing to the actual final frame,
+  and remove any hard rule or colour jump at the boundary.
+- **The page after the film reads as a template** → the plan was defaulted, not designed.
+  Statement → cards → testimonials → CTA is the tell. Redo Steps D–E of
+  [`sections/post-film.md`](../sections/post-film.md).
+- **A post-film section renders but nothing animates or responds** → a React tree was
+  stringified into `kind:'html'`, which is `innerHTML`. Use an empty `html` act with an
+  `id` and portal the component in ([`platforms/web/nextjs.md`](../platforms/web/nextjs.md)).
+- **The film's HUD and copy sit on top of the sections** → the chrome fade is gated on the
+  acts array being non-empty. The footer is mandatory, so `acts` is never empty; if it is,
+  the config is wrong.
+
 ## Phone and iOS → [`validation/qa-checklist.md`](qa-checklist.md)
 
 - **Blank / black scene on iOS, fine on desktop** → a muted video that was never played

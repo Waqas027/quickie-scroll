@@ -9,7 +9,7 @@
 The web build is a **Next.js App Router project** by default, not a single HTML file. The
 scrub engine is unchanged — it is the same vanilla file the static build uses — but the
 project around it gives you a real animation environment: Lenis smooth scroll, Framer
-Motion or GSAP for the acts, component reuse across chapters, MDX for copy, and image
+Motion or GSAP for the post-film sections, component reuse across chapters, MDX for copy, and image
 optimisation for the posters.
 
 A standalone `index-template.html` is still shipped for a zero-install preview. Use it to
@@ -145,10 +145,16 @@ const config: QSConfig = {
     },
     // …alternate align: 'right', 'center', 'left'…
   ],
+  // The post-film page: 4–5 designed sections, then the mandatory footer. Chosen by the
+  // skill from the subject — never asked, never the default statement→cards→cta shape.
+  // → sections/post-film.md
   acts: [
     { kind: 'statement', tone: 'light', eyebrow: 'WHAT WE ACTUALLY SELL',
       title: 'The distance was never the point.' },
-    { kind: 'cta', tone: 'tint', title: 'Tell us where home is.', action: { label: 'Begin' } },
+    // Interactive sections are empty `html` slots the React tree portals into (below).
+    { kind: 'html', id: 'route-constellation', tone: 'dark', html: '' },
+    { kind: 'html', id: 'cabin-explorer',      tone: 'light', html: '' },
+    { kind: 'html', id: 'night-gallery',       tone: 'dark', html: '' },
     { kind: 'footer', tone: 'dark', brand: 'MERIDIAN',
       links: [{ label: 'Routes', href: '#' }, { label: 'Contact', href: '#' }],
       note: '© 2026 Meridian Air' },
@@ -174,6 +180,43 @@ Identical, minus the Next specifics: `npm create vite@latest -- --template react
 assets in `public/`, the same `QuickieScroll.tsx`, and mount `<SmoothScroll>` in
 `main.tsx`. No `'use client'` needed (it is ignored, so the file is portable as-is).
 
+## Interactive post-film sections — the portal slot
+
+Most designed sections are interactive (a showcase, a configurator, a comparison, a map),
+and `kind: 'html'` is `innerHTML` — a React tree stringified into it is dead markup. Two
+routes, and only one of them keeps Framer Motion working:
+
+| Section | How |
+|---|---|
+| Static markup | `{ kind:'html', tone, html:'<figure>…</figure>' }` — done |
+| **Anything interactive or animated** | An **empty** `html` act with an `id`, and a client component portalled into it |
+
+The act must stay in `acts` rather than becoming a sibling of `<QuickieScroll>`, because
+the engine appends every act — the footer included — inside its own container, and a
+sibling would land *after* the footer.
+
+```tsx
+'use client';
+import { createPortal } from 'react-dom';
+import { useEffect, useState } from 'react';
+
+export function ActPortal({ id, children }: { id: string; children: React.ReactNode }) {
+  const [host, setHost] = useState<Element | null>(null);
+  // The engine builds the acts on mount, so the slot does not exist on first render.
+  useEffect(() => setHost(document.getElementById(id)), [id]);
+  return host ? createPortal(children, host) : null;
+}
+```
+
+```tsx
+<QuickieScroll config={config} />
+<ActPortal id="route-constellation"><RouteConstellation routes={routes} /></ActPortal>
+<ActPortal id="cabin-explorer"><CabinExplorer cabins={cabins} /></ActPortal>
+```
+
+The slot keeps the engine's `.sw-act` rhythm and tone tokens, so a portalled section still
+inherits the film's spacing and palette for free.
+
 ## Where the extra animation capability actually goes
 
 The film itself is pre-rendered — that is the whole technique, and no library improves it.
@@ -182,10 +225,10 @@ What a React project buys you is everything *around* the film:
 | Want | Use | Note |
 |---|---|---|
 | Smooth scroll feel | **Lenis** | The one change you should always make |
-| Acts animating in | Framer Motion `whileInView` | Acts are ordinary DOM; animate freely |
-| Pinned / timeline effects in the acts | GSAP ScrollTrigger | Keep it **out** of the film's scroll range — two systems driving one scroll fight |
+| Post-film sections | Framer Motion / Motion | Ordinary DOM below the film — the preferred tool for the major interactive sections |
+| Pinned / timeline effects after the film | GSAP ScrollTrigger | Keep it **out** of the film's scroll range — two systems driving one scroll fight |
 | Per-chapter routes / deep links | Next router + the engine's `jumpTo` | Wire a `?chapter=` param to a scroll offset |
-| Optimised posters | `next/image` on the acts | Do **not** use it for `still` — the engine sets `img.src` itself |
+| Optimised posters | `next/image` in the post-film sections | Do **not** use it for `still` — the engine sets `img.src` itself |
 
 Two hard rules:
 
@@ -194,7 +237,7 @@ Two hard rules:
    scenes detach from the viewport and the film collapses.
 2. **Do not add a second scroll driver over the film's range.** GSAP ScrollTrigger's
    `scrub` and this engine both map scroll to time; running both means two sources of
-   truth for one playhead. Use GSAP below the film, in the acts.
+   truth for one playhead. Use GSAP below the film, in the post-film sections.
 
 ## QA additions for the Next build
 

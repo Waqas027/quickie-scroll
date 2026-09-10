@@ -13,8 +13,8 @@
 
 A scroll-driven <web | Flutter | web + app> experience: scroll sets the playhead of a
 pre-rendered continuous camera move, so the camera genuinely travels and scroll only
-drives time. <N> chapters of copy pin over the film, then <the acts> scroll up over the
-last frame.
+drives time. <N> chapters of copy pin over the film, then <the post-film sections> scroll
+up over the last frame.
 
 ## The build
 
@@ -27,7 +27,7 @@ last frame.
 | Palette | `<bg>` background · `<accent>` accent · <the rest> |
 | Type | <Display> / <Body> |
 | Assets | **1 still + <N> clips** <(× 2 for the portrait chain)> |
-| After the film | <the acts, in order> |
+| After the film | <the 4–5 section names, in order, + footer> |
 | Asset source | <manual — the prompt pack is the deliverable | automatic via `<tool>`> |
 
 ## The journey
@@ -36,6 +36,25 @@ last frame.
 |---|---|---|---|
 | 01 | <label> | <one line> | "<title>" |
 | 02 | … | … | … |
+
+## After the film
+
+<One line naming the primary visitor action this page is built to reach — buy / book /
+explore / configure / contact / …>
+
+| # | Section | Why it's here | Interaction & motion |
+|---|---|---|---|
+| 01 | <NAME> | <what it does for *this* subject, not "sites usually have one"> | <e.g. scroll-driven reveal, Framer Motion spring; hover expands a product> |
+| 02 | … | … | … |
+| 03 | … | … | … |
+| 04 | … | … | <or: **static — deliberately**, because …> |
+| — | Footer | <what it carries and why: links, brand, newsletter only if it earns it> | <subtle reveal / static> |
+
+**Continuity from the last frame:** <how section 01 inherits the film's light, palette and
+motion direction.>
+
+<!-- only when a section uses material the user didn't supply -->
+**Sourced material:** <what was sourced, from where, and anything labelled as sample data.>
 
 <!-- only when the user supplied references -->
 ## References

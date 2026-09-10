@@ -98,7 +98,7 @@ Full rules: [`video/prompting.md`](../video/prompting.md).
 
 The engine maps scroll to a playhead. A second driver over the same range (GSAP
 ScrollTrigger `scrub`, a second scrubbed video) fights it. Extra motion goes **below** the
-film, in the acts, as CSS or Framer Motion.
+film, in the post-film sections, as CSS or Framer Motion.
 
 And never put a CSS transform on an ancestor of the film container: a transform creates a
 containing block and breaks the engine's `position: fixed` layers.
@@ -122,7 +122,30 @@ Priority order, highest first:
 
 Drop the adjective before you drop a lock.
 
-## 12. Two documents, no overlap
+## 12. The page after the film is designed, never asked
+
+The user is **never** asked which sections follow the film, whether they want a footer, or
+whether to stop at the film. They gave a subject and a look; the continuation follows from
+those, and asking hands back the one genuinely creative decision they came here to delegate.
+
+Every build ships **4 or 5 designed sections plus a mandatory footer** — the footer is the
+closing frame, not one of the slots. Derive them with Steps A–G, and never emit the default
+shape (statement → cards → testimonials → CTA); if a plan comes out looking like that, it
+was not designed. The first section inherits the film's palette, type, grain and light so
+the page reads as one experience, not a video with a landing page bolted underneath.
+
+Procedure and the idea library: [`sections/post-film.md`](../sections/post-film.md).
+
+## 13. Real-world entities stay real
+
+When a section needs real-world information, prefer real places, businesses, products and
+verified data. Do not fabricate real-world entities, do not present fictional data as
+factual, and never present static data as live. Demo or sample content is labelled as such
+in the page and in `README.md`.
+
+If a section can only exist by inventing facts, it was the wrong section — pick another.
+
+## 14. Two documents, no overlap
 
 `README.md` is what the project is; `brief.md` is where production is. Production status
 never goes in the README, and the README's decisions never get restated in the brief.

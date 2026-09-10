@@ -11,7 +11,7 @@
       "name": "quickie-scroll",
       "source": "./",
       "skills": ["./skills/quickie-scroll"],
-      "description": "Scroll drives a real camera through a photoreal world. Interviews for target, look, camera architecture, chapters and the editorial page after the film; generates one start image and chains every later scene off the previous clip's last frame; writes seven-block image-to-video prompts that render in any tool; scaffolds a Next.js project with the scrub engine and Lenis smooth scroll, or — after probing for a Flutter/Android SDK — a dependency-free 9:16 mobile app.",
+      "description": "Scroll drives a real camera through a photoreal world. Interviews for target, look, camera architecture, chapters; designs the four-to-five-section page after the film itself instead of asking; generates one start image and chains every later scene off the previous clip's last frame; writes seven-block image-to-video prompts that render in any tool; scaffolds a Next.js project with the scrub engine and Lenis smooth scroll, or — after probing for a Flutter/Android SDK — a dependency-free 9:16 mobile app.",
       "category": "design"
     }
   ]

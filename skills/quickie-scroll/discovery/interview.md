@@ -7,7 +7,7 @@ says so.*
 [`art-direction/looks.md`](../art-direction/looks.md) ·
 [`animation/camera.md`](../animation/camera.md) ·
 [`animation/scene-planning.md`](../animation/scene-planning.md) ·
-[`sections/acts.md`](../sections/acts.md)
+[`sections/post-film.md`](../sections/post-film.md)
 
 ---
 
@@ -103,22 +103,14 @@ own logic and let the user edit.
 What each chapter needs, and the copy rules that keep a film from reading as a template:
 [`animation/scene-planning.md`](../animation/scene-planning.md).
 
-## 6. The page after the film — always ask, and let them pick several
-
-A scroll cinematic on its own is a hero, not a product site. Ask as a **multi-select** and
-collect the copy for each option chosen. Options, ordering and the continuity rules:
-[`sections/acts.md`](../sections/acts.md).
-
-"Film only" is a legitimate answer — but it must be the user's answer, not your default.
-
-## 7. Mobile
+## 6. Mobile
 
 Desktop only, or a native 9:16 portrait chain as well (roughly doubles the video workload —
 state that). Forced on when the target is the app. The engine's phone hardening (seek
 coalescing, iOS priming, safe-area) is always on regardless; that isn't a "mobile version",
 it's the page not breaking when a phone visits.
 
-## 8. Asset source
+## 7. Asset source
 
 Automatic (a connected renderer, if Step 0 found one) or manual (the prompt pack is the
 deliverable). Record as `ASSET_SOURCE`.
@@ -130,11 +122,22 @@ deliverable). Record as `ASSET_SOURCE`.
   re-roll headroom. Confirm their video tool accepts a **start frame**. If it can't, it
   can't hold a seam: steer them to a tool that can, don't ship an unseamed build.
 
+## What is never asked
+
+**Which sections follow the film.** That decision is the skill's, not the user's — there is
+no multi-select, no "film only" option, no "do you want a footer?". Run Steps A–G of
+[`sections/post-film.md`](../sections/post-film.md), draft the 4–5 section plan plus the
+mandatory footer, and put it in `README.md` as a stated decision the user can push back on.
+Asking hands back the one genuinely creative decision they came here to delegate.
+
 ## Closing the interview
 
 Write `README.md` (what this project is) and `brief.md` (where production is) from
 [`project/documents.md`](../project/documents.md) **before generating a single prompt
 file**. Two documents, no overlap. Both stay short enough to skim.
+
+`README.md` carries the post-film plan under **After the film** — drafted now from the
+subject and the look, confirmed against the film's real last frame at Step 8.
 
 ---
 
@@ -158,8 +161,11 @@ file**. Two documents, no overlap. Both stay short enough to skim.
 - `CAMERA` — walkthrough (arch A) | fly-through (arch B) | locked-iso (arch A + clause).
 - `CHAPTERS[]` — for each: `id`, `label`, `subject`, `eyebrow`, `title`, `body`, `tags[]`,
   `align` (left/right/centre — alternate them), `accent`.
-- `ACTS` — the page after the film: any of statement / cards / cta / footer / reviews /
-  testimonials / animated / custom / none. **Multi-select, always asked.**
+- `POST_FILM[]` — the page after the film: 4–5 designed sections plus a mandatory footer.
+  **Never asked — derived** by Steps A–G of [`sections/post-film.md`](../sections/post-film.md)
+  from `SUBJECT`, `REFS`, `LOOK`, `PALETTE` and `CHAPTERS[]`. Each entry carries `id`,
+  `name`, `purpose`, `why`, `visual`, `content`, `interaction`, `motion`, `assets`,
+  `transitionIn`, `transitionOut`. Lands in the engine's `acts` array at Step 8.
 - `MOBILE` — desktop only | + native 9:16 chain. (Forced to 9:16 when `TARGET` = app.)
 - `ASSET_SOURCE` — automatic (a connected tool renders) | manual (the pack is the
   deliverable).

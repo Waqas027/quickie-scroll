@@ -20,6 +20,11 @@ to work out what to do next. Mixing them produces the failure this replaces: a 3
 README nobody can skim, where the one line that matters ("clip 03 is next") is buried under
 rejection history.
 
+The post-film plan — the 4–5 designed sections and the footer, and why each one is there —
+lives in `README.md` under **After the film**. It is a design decision, not production
+status. Drafted at the close of the interview, confirmed against the film's real last frame
+at Step 8. → [`sections/post-film.md`](../sections/post-film.md)
+
 **Never put production status in `README.md`.** No accepted/rejected, no take letters, no
 prompt-testing history, no "ready for the next scene", no regeneration log. If it changes
 when a file lands, it belongs in `brief.md`.

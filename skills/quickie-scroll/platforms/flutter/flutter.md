@@ -139,7 +139,7 @@ of it using the fps table above.
   100 MB / 1000 objects by default; a 6-chapter film at 12 fps fits. If a larger build
   evicts and re-decodes visibly, raise it once at startup:
   `PaintingBinding.instance.imageCache.maximumSizeBytes = 200 << 20;`
-- **Scroll past the film into the acts.** The pinned copy and HUD must disappear and the
+- **Scroll past the film into the post-film sections.** The pinned copy and HUD must disappear and the
   film must dim — that handover is the `past` flag in the scaffold.
 - **Rotate.** The film is composed 9:16; lock portrait unless the build deliberately
   ships a landscape chain too:

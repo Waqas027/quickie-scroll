@@ -32,6 +32,20 @@ Status is one of: ⛔ blocked · ⬜ ready to render · 🔄 rendering · ❌ re
 A clip is **blocked** until the clip before it is accepted and its `last-` frame extracted —
 that dependency is the whole point of the table.
 
+## After the film
+
+The plan itself is in `README.md`; this tracks whether it is built. Add the rows once the
+plan exists — one per section plus the footer.
+
+| # | Section | Status |
+|---|---|---|
+| 01 | <NAME> | ⬜ not built |
+| … | … | … |
+| — | Footer | ⬜ not built |
+
+Section 01 stays ⛔ blocked until the last clip is accepted — its opening composition is
+matched to the film's real final frame.
+
 ## Notes
 
 - <one line per thing worth carrying forward: a rejection and its cause, a drift between a
