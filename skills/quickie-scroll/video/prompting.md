@@ -31,7 +31,8 @@ adjective before you drop a lock.
        never a re-render -->
 - **End frame:** — none — (architecture A never uses one; an end frame pulls the camera
   back, the number-one cause of seam stutter)
-- **Aspect:** 16:9 · **Duration:** 8 s · **No audio** · highest quality the tool offers
+- **Aspect:** 16:9 · **Duration:** <6–10 s, selected from the chapter's pace role> ·
+  **No audio** · highest quality the tool offers
 - **Save as:** `assets/videos/NN-<slug>.mp4`
 
 ## Prompt
@@ -50,6 +51,10 @@ nothing is removed.
 
 CAMERA: One continuous camera move, no cuts. <ONE move — from the library below> at <a
 walking pace / a slow drift>. The camera never stops, never pauses and never pulls back.
+
+TIMING: 0–<n−2>s: <the stable travel/reveal beat>. <n−2>–<n−1>s: <the copy-readable
+composition / reveal completion>. Final 1s: a calm forward handoff. The pace is
+<slow controlled drift / measured walk / brisk transit>; no unrequested acceleration.
 
 SUBJECT: <the one thing that moves on its own, and only that — "the paddle turns slowly in
 the vat", "the parts drift apart, rotate, and lock into position". If nothing does: "Nothing
@@ -83,7 +88,9 @@ expensive, fast moves expose artefacts.
       sideways (**this frame becomes the next clip's start image**)
 - [ ] Foreground passes faster than background — if everything moves together it is a pan
       across a matte painting; reject it
-- [ ] 16:9, ~8 s, no audio, no text burned in
+- [ ] 16:9, exact requested duration (±0.5 s), no audio, no text burned in
+- [ ] The timing contract is visible: a readable composition precedes the final handoff,
+      with no accidental speed ramp
 ````
 
 ### The rules that make the blocks work
@@ -101,9 +108,11 @@ These are what actually cut the rejection rate. Follow them literally.
    (weather, a crowd, a second machine) is where physics falls apart.
 4. **Every noun in THROUGH is already in START, or is explicitly declared as visible
    ahead.** A destination the model has to invent mid-shot arrives as a cut.
-5. **Name the speed, not the mood.** "At a walking pace", "at a slow drift" are executable.
-   "Dramatically", "epically", "with energy" are not, and each one raises the odds of a
-   speed ramp.
+5. **Name the speed and timing, not the mood.** "At a walking pace", "at a slow drift"
+   and the short TIMING contract are executable. "Dramatically", "epically", "with
+   energy" are not, and each one raises the odds of a speed ramp. The clip duration must
+   support the move: 6–7 s for brisk transit, 8 s for a standard reveal, 9–10 s for
+   orientation, inspection or final resolve.
 6. **END and FINAL FRAME are two different blocks, and both are required.** END is the
    *velocity* at the end; FINAL FRAME is the *composition* at the end. The chain needs
    both: velocity so the next clip does not reverse, composition so you know before
@@ -112,7 +121,9 @@ These are what actually cut the rejection rate. Follow them literally.
    ones nobody wrote down. If a product is the anchor, its lock clause goes here verbatim.
 8. **Keep it achievable.** A move a real camera operator could not perform in one take is
    a move the model will fake with a cut. When a beat needs two moves, it needs two
-   chapters.
+   chapters. A genuine fast-to-slow shift is two beats: make the cut at a threshold and
+   let the next clip begin from the real extracted frame; never ask a generator to
+   improvise a speed ramp.
 9. **The transition between rooms belongs inside a clip, not between clips.** Cross the
    threshold *within* the shot — through a doorway, into a dark opening, out into
    daylight — so the seam falls in open space where nothing has to match but position.

@@ -150,3 +150,39 @@ If a section can only exist by inventing facts, it was the wrong section — pic
 `README.md` is what the project is; `brief.md` is where production is. Production status
 never goes in the README, and the README's decisions never get restated in the brief.
 Templates: [`project/documents.md`](../project/documents.md).
+
+## 15. Build the real visitor journey, not an attractive content shell
+
+The hero film earns attention; the rest of the page must help a visitor make the decision
+the subject exists for. Before choosing post-film sections, write an experience brief with
+the visitor, primary action, decision-critical information and appropriate interaction.
+A travel brand may need destination filters, an itinerary builder and a booking handoff; a
+store may need collection discovery, product comparison/variants and a basket path. Do not
+replace those jobs with decorative cards, generic metrics or a final button.
+
+Follow [`discovery/experience-brief.md`](../discovery/experience-brief.md). The section
+count remains 4–5, but a section may contain a complete, purposeful interactive module.
+
+## 16. Source required imagery before designing around it
+
+User assets remain first choice. If an approved section needs imagery the user did not
+supply, search for it proactively, select assets whose license and permitted use are clear,
+download/copy only when permitted, and record source URL, creator, license/use status and
+local filename in `assets/SOURCES.md`. Search results are not proof of a license. Never
+hotlink arbitrary search results, scrape an image behind a paywall, or imply an editorial
+image is owned by the brand. If no suitable asset can be legally used, redesign the section
+around available assets rather than substituting a fabricated visual.
+
+Procedure: [`assets/sourcing.md`](../assets/sourcing.md).
+
+## 17. Motion is choreographed against scroll, not merely animated
+
+Every film chapter has a duration, a scroll allocation, a readable-copy hold and an
+explicit motion-intensity curve. Use slow, controlled movement for orientation, product
+inspection and reading; use shorter, higher-energy movement only for transitions or reveals.
+Do not ask a video model for an unexplained speed ramp. When a pace change is necessary,
+express it as separate beats/clips and map the scroll distance accordingly. The final second
+of every clip still resolves into the stable handoff required by rule 1.
+
+Procedure: [`video/prompting.md`](../video/prompting.md) and
+[`animation/scene-planning.md`](../animation/scene-planning.md).

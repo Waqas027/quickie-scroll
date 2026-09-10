@@ -27,7 +27,7 @@ template. The readability scrim follows `align` automatically.
 
 ---
 
-## Pacing — the two per-chapter knobs
+## Pacing — choreograph the camera and the scroll together
 
 Pacing lives in `scroll` and `linger`, both set per chapter in the engine config:
 
@@ -36,8 +36,23 @@ Pacing lives in `scroll` and `linger`, both set per chapter in the engine config
   copy peaks, then picks up toward the seam. **Seam frames are untouched**, so linger can
   never break a seam.
 
-Give the opening and finale more of both; keep transit chapters brisk. Prefer expressive
-motion in the *clip* and restraint in the *scrub mapping* — they compound.
+Every chapter records four values alongside its copy:
+
+| Value | What it controls |
+|---|---|
+| `role` | `orient`, `reveal`, `explore`, `transition`, or `resolve` |
+| `duration` | 6–10 seconds for web, chosen for the actual move—not a universal 8 seconds |
+| `scroll` / `linger` | reader dwell and the copy's peak moment |
+| `pace` | a plain-language speed contract: slow controlled drift, measured walk, or brisk transit |
+
+Use **orient** and **explore** for slow, readable movement; use **reveal** for a measured
+scale change; reserve **transition** for the shortest, briskest leg; use **resolve** for a
+long, calm final composition. Give the opening and finale more dwell; keep transit chapters
+brisk. Prefer expressive motion in the *clip* and restraint in the *scrub mapping* — they
+compound.
+
+A pace change is a new beat, normally a new clip. Do not bury “slow, then suddenly fast,
+then slow” inside one generated shot. The last second is always the calm handoff frame.
 
 ---
 

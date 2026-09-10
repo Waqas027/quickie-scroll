@@ -51,6 +51,14 @@ result, not the working.
 **Every section must justify its existence.** If the honest answer to "why is this here?"
 is "sites usually have one", cut it and pick something better.
 
+**A section may be a real product module, not only a visual moment.** If the experience
+brief says a visitor needs to compare destinations, explore products, build an itinerary,
+choose a variant or start a booking/order, build that interaction as part of the section.
+It must work without scroll, on touch and keyboard, and it must have honest data states.
+The fixed 4–5 section count limits page rhythm; it does not limit the usefulness of an
+individual section. → [`discovery/experience-brief.md`](../discovery/experience-brief.md)
+and [`assets/sourcing.md`](../assets/sourcing.md).
+
 ---
 
 ## The plan format — concept-first
@@ -233,14 +241,18 @@ sample content in the page and note it in `README.md`.
 substitute a visually similar unrelated product for an identifiable one
 ([`core/rules.md`](../core/rules.md) §4).
 
-When a section genuinely needs imagery or data the user didn't supply, sourcing real
-material from the internet is allowed where legally and technically appropriate. Then:
+When a section genuinely needs imagery or data the user didn't supply, source real material
+proactively from the internet where legally and technically appropriate. Then:
 
 - Prefer **real** places, businesses, products and verified information.
 - **Do not fabricate real-world entities.** No invented hotels, no invented restaurants, no
   invented specifications, no invented awards.
 - **Do not present fictional data as factual**, and never present static data as live.
 - Label demo or sample data plainly, in the page and in `README.md`.
+
+Use the source and provenance process in [`assets/sourcing.md`](../assets/sourcing.md).
+Never use an arbitrary image-search result without checking its actual asset page and
+permitted use.
 
 If a section can only exist by inventing facts, that section was the wrong choice. Go back
 to Step E and pick a better one.

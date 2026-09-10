@@ -8,8 +8,15 @@ description: >
   of the site scrolls up over the finished film. Never asks which sections come after the
   film — it acts as creative director and designs four or five premium, concept-specific
   sections plus a mandatory context-aware footer from the subject, the look and the
-  references, so the film evolves into a complete site rather than being followed by a
-  generic landing page. Generates exactly one start image —
+  references, so the film evolves into a complete, domain-native site rather than being
+  followed by a generic landing page. Treats the film as the emotional opening, then builds
+  the actual product journey: discovery, comparison, itinerary or basket building,
+  conversion and operational detail when those belong to the subject. Sources the real
+  imagery that those sections need from the web when the user has not supplied it, records
+  provenance and license/use status, and never fills a page with invented businesses,
+  destinations, products, prices or reviews. Uses the UI/UX Pro Max skill when it is
+  available to establish the interaction and accessibility system before implementation.
+  Generates exactly one start image —
   every later scene is conditioned on the previous clip's actual last frame — and writes
   each clip prompt in a fixed seven-block form built for image-to-video models rather than
   for cinematic prose. Locks a user-supplied product as the visual anchor, sorts design
@@ -75,14 +82,14 @@ running the step, not after.
 | Step | What happens | Read first |
 |---|---|---|
 | **0** | Bootstrap — ffmpeg, renderer probe, app-toolchain probe | [`core/bootstrap.md`](core/bootstrap.md) |
-| **1** | Interview — references, target, subject, look, camera, chapters, mobile, asset source | [`discovery/interview.md`](discovery/interview.md) |
+| **1** | Experience brief — references, target, subject, audience, primary action, real content/assets, look, camera and chapters | [`discovery/interview.md`](discovery/interview.md) → [`discovery/experience-brief.md`](discovery/experience-brief.md) |
 | **2** | State the chained workflow to the user, then write the prompt pack | [`core/rules.md`](core/rules.md) → [`video/prompt-pack.md`](video/prompt-pack.md) |
 | **3** | The one start frame | [`image/start-frame.md`](image/start-frame.md) |
 | **4** | Rendering — who renders, at what cost | [`video/rendering.md`](video/rendering.md) |
 | **5** | The seamless chain — architecture A or B | [`animation/chain.md`](animation/chain.md) |
 | **6** | The manual handoff — the per-clip loop | [`project/handoff-loop.md`](project/handoff-loop.md) |
 | **7** | Encode for scrubbing | [`pipeline/encoding.md`](pipeline/encoding.md) |
-| **8** | Design the post-film page, then assemble — Next.js, Flutter or Android | [`platforms/`](platforms/) |
+| **8** | Source missing section assets, design the post-film product journey, then assemble — Next.js, Flutter or Android | [`assets/sourcing.md`](assets/sourcing.md) → [`platforms/`](platforms/) |
 | **9** | QA | [`validation/qa-checklist.md`](validation/qa-checklist.md) |
 
 ### Step 0 — Bootstrap
@@ -101,6 +108,10 @@ prompt. → [`discovery/interview.md`](discovery/interview.md), which routes to
 [`art-direction/looks.md`](art-direction/looks.md),
 [`animation/camera.md`](animation/camera.md),
 [`animation/scene-planning.md`](animation/scene-planning.md).
+
+Turn the answer into an experience brief before scene planning: visitor, primary action,
+decision-critical content, real-world scope, and what the visitor needs to accomplish after
+the emotional film. → [`discovery/experience-brief.md`](discovery/experience-brief.md)
 
 **What follows the film is not asked.** No section multi-select, no "film only", no "do you
 want a footer?" — the skill designs 4–5 sections plus a mandatory footer from the subject
@@ -158,11 +169,13 @@ app-target frame sequences differ. → [`pipeline/encoding.md`](pipeline/encodin
 
 ### Step 8 — Design the post-film page, then assemble
 
-The film is one half of the deliverable. Before scaffolding, look at the film's **real last
-frame** and confirm the post-film plan drafted at Step 1 against it: **4–5 designed sections
-plus a mandatory footer**, each with a reason to exist for this subject, the first one
-inheriting the last frame's palette, light and motion direction. Never the default
-statement → cards → testimonials → CTA. → [`sections/post-film.md`](sections/post-film.md)
+The film is one half of the deliverable. Before scaffolding, source the real imagery the
+approved experience requires if the user did not provide it — never fake a destination,
+hotel, product, price or review. → [`assets/sourcing.md`](assets/sourcing.md). Then look at
+the film's **real last frame** and confirm the post-film plan drafted at Step 1 against it:
+**4–5 designed sections plus a mandatory footer**, each with a reason to exist for this
+subject, the first one inheriting the last frame's palette, light and motion direction.
+Never the default statement → cards → testimonials → CTA. → [`sections/post-film.md`](sections/post-film.md)
 
 Then build:
 
@@ -194,6 +207,7 @@ Where to change what. One domain, one folder, one source of truth.
 | The bar the output must clear | `core/quality.md` |
 | Environment probes, renderer detection | `core/bootstrap.md` |
 | The questions asked, and their order | `discovery/interview.md` |
+| Turning a subject into a production-worthy visitor journey | `discovery/experience-brief.md` |
 | How supplied product / style references are handled | `discovery/references.md` |
 | The art-direction library, or a look's palette and type | `art-direction/looks.md` |
 | What makes a frame read as film rather than AI | `art-direction/realism.md` |
@@ -206,6 +220,7 @@ Where to change what. One domain, one folder, one source of truth.
 | Writing clip *n* from clip *n−1*; connector prompts | `video/continuity.md` |
 | Renderer choice, cost, spend approval | `video/rendering.md` |
 | The page after the film — how it is designed | `sections/post-film.md` |
+| Finding, licensing, downloading and attributing section imagery | `assets/sourcing.md` |
 | Next.js scaffold, React wrapper, engine config | `platforms/web/` |
 | The Flutter or Android app target | `platforms/flutter/`, `platforms/android/` |
 | The scrub engine itself | `engine/quickie-scroll.js` |

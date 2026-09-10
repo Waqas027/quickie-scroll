@@ -70,6 +70,12 @@ changes.
 "What should this be about? Your business, a client's, or any idea — a word or a sentence
 is fine." Capture the product/industry, a one-line pitch, and a brand name if they have one.
 
+Immediately identify the likely visitor and the primary action. If the answer does not make
+either clear, ask one compact follow-up (for example, “Should visitors book a trip, explore
+destinations, or enquire?”). Do not ask the user to choose sections. Capture the result in
+the experience brief before moving to look and scene planning.
+→ [`experience-brief.md`](experience-brief.md)
+
 ## 3. Look — the art direction
 
 Present three or four by name and feel, not by their preamble text:
@@ -102,6 +108,10 @@ own logic and let the user edit.
 
 What each chapter needs, and the copy rules that keep a film from reading as a template:
 [`animation/scene-planning.md`](../animation/scene-planning.md).
+
+Each chapter also gets a pace role: **orient**, **reveal**, **explore**, **transition** or
+**resolve**. This determines duration, scroll allocation and copy hold; it prevents a film
+from using one slow cloud descent for every subject.
 
 ## 6. Mobile
 

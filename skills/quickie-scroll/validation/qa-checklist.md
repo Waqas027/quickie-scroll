@@ -72,6 +72,10 @@ Judged as part of the same piece as the film, not as a website appended to one.
   was swapped for a lookalike.
 - No fabricated places, businesses, specifications or awards; nothing static presented as
   live; demo data labelled in the page and in `README.md`.
+- Every adopted web image has a source, creator/owner, license/use status and local filename
+  recorded in `assets/SOURCES.md`; no arbitrary hotlinks or unverified search thumbnails.
+- The primary action works with keyboard and touch, including visible focus states and an
+  understandable empty/demo state for interactive modules.
 
 **Craft**
 
