@@ -31,7 +31,13 @@
   <script src="quickie-scroll.js"></script>
   <script>
     mountQuickieScroll(document.getElementById('world'), {
-      brand: { name: 'BRAND', href: '#top' },
+      // Chrome — pick these per build; the defaults are what make two sites look alike.
+      // mark: an inline SVG string designed for this brand, or false for wordmark only.
+      brand: { name: 'BRAND', href: '#top', mark: false },
+      nav: 'pills',          // 'pills' | 'plain' | 'numbers' | false
+      navPlace: 'right',     // 'right' | 'center'
+      route: 'dots',         // 'dots' | 'bars' | 'numbers' | 'labels' | false
+      routeSide: 'right',    // 'right' | 'left'
       cta: { label: 'CTA', href: '#finale' },
       hint: 'scroll to begin',
       diveScroll: 1.4,

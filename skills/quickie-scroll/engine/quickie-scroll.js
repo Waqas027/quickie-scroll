@@ -8,11 +8,21 @@
 
    USAGE
      mountQuickieScroll(document.getElementById('world'), {
-       brand: { name: 'Pearl & Co.', href: '#top' },
+       brand: { name: 'Pearl & Co.', href: '#top',
+                mark: '<svg …>' },   // CHROME: the brand mark. A raw SVG/HTML string is
+                                     // rendered as-is; `false` ships a wordmark only;
+                                     // omitted falls back to the generic accent pill —
+                                     // which is the one shape that makes two builds look
+                                     // like the same site. Design it. See chrome.md.
        diveScroll: 1.3,   // viewport-heights of scroll per dive clip
        connScroll: 0.9,   // ...per connector clip
        hint: 'scroll to fly in',
-       nav: true,         // show the top section nav
+       nav: 'pills',      // CHROME: top chapter nav — 'pills' (default) | 'plain' |
+                          // 'numbers' | false. `true` === 'pills'.
+       navPlace: 'right', // 'right' (default) | 'center'
+       route: 'dots',     // CHROME: scroll-progress indicator — 'dots' (default) |
+                          // 'bars' | 'numbers' | 'labels' | false
+       routeSide: 'right',// 'right' (default) | 'left'
        atmosphere: true,  // subtle gradient + drifting particles behind the clips
        hud: {             // cinematic corner HUD (see HUD below). Omit to disable.
          system: 'FIELD VESSEL / 01',   // top-left system label
@@ -138,14 +148,33 @@ function mountQuickieScroll(container, config) {
   const scrollbar = el('div', 'sw-scrollbar');
   const scrollbarFill = el('span'); scrollbar.appendChild(scrollbarFill);
 
+  // ---- chrome variants ------------------------------------------------------
+  // The chrome is the first thing a visitor sees and the last thing that should be
+  // identical between two builds. Every piece below has variants for that reason;
+  // the defaults are a starting point, not a house style. See platforms/web/chrome.md.
+  const navMode = config.nav === false ? null
+    : (typeof config.nav === 'string' ? config.nav : 'pills');
+  const routeMode = config.route === false ? null
+    : (typeof config.route === 'string' ? config.route : 'dots');
+
   const topbar = el('div', 'sw-topbar');
+  if (config.navPlace === 'center') topbar.classList.add('sw-topbar--navcenter');
   if (config.brand) {
     const brand = el('a', 'sw-brand'); brand.href = (config.brand.href || '#');
-    brand.appendChild(el('span', 'sw-brand__mark'));
-    const nm = el('span', 'sw-brand__name'); nm.textContent = config.brand.name || ''; brand.appendChild(nm);
+    const mark = config.brand.mark;
+    if (mark !== false) {
+      const mk = el('span', 'sw-brand__mark');
+      // A supplied mark is build-authored markup (an inline SVG lockup), not user input.
+      if (typeof mark === 'string' && mark) { mk.classList.add('sw-brand__mark--custom'); mk.innerHTML = mark; }
+      brand.appendChild(mk);
+    }
+    if (config.brand.name) {
+      const nm = el('span', 'sw-brand__name'); nm.textContent = config.brand.name; brand.appendChild(nm);
+    }
     topbar.appendChild(brand);
   }
-  const nav = el('nav', 'sw-nav'); if (config.nav !== false) topbar.appendChild(nav);
+  const nav = el('nav', 'sw-nav' + (navMode ? ' sw-nav--' + navMode : ''));
+  if (navMode) topbar.appendChild(nav);
   if (config.cta && config.cta.label) {
     const c = el('a', 'sw-topcta'); c.href = config.cta.href || '#'; c.textContent = config.cta.label;
     topbar.appendChild(c);
@@ -153,7 +182,8 @@ function mountQuickieScroll(container, config) {
 
   const stage = el('div', 'sw-stage');
   const copylayer = el('div', 'sw-copylayer');
-  const route = el('div', 'sw-route');
+  const route = el('div', 'sw-route' + (routeMode ? ' sw-route--' + routeMode : '') +
+    (config.routeSide === 'left' ? ' sw-route--left' : ''));
   const hint = el('div', 'sw-hint');
   const hintText = el('span'); hintText.textContent = config.hint || 'scroll'; hint.appendChild(hintText);
   hint.appendChild(el('i'));
@@ -177,7 +207,9 @@ function mountQuickieScroll(container, config) {
   const after = el('div', 'sw-after');
   (config.acts || []).forEach(a => { const n = renderAct(a); if (n) after.appendChild(n); });
 
-  [sky, scrollbar, topbar, stage, copylayer, route, hint, hud, track, after].forEach(n => container.appendChild(n));
+  const chrome = [sky, scrollbar, topbar, stage, copylayer, hint, hud, track, after];
+  if (routeMode) chrome.splice(5, 0, route);
+  chrome.forEach(n => container.appendChild(n));
 
   // segment scenes
   SEGMENTS.forEach(s => {
@@ -205,11 +237,15 @@ function mountQuickieScroll(container, config) {
     copylayer.appendChild(c); copies.push(c);
 
     const dot = el('button', 'sw-route__dot'); dot.style.setProperty('--sw-accent', s.accent || '');
-    dot.innerHTML = `<span class="sw-route__label">${esc(s.label || '')}</span><i></i>`;
+    dot.setAttribute('aria-label', s.label || ('Chapter ' + (i + 1)));
+    dot.innerHTML = `<span class="sw-route__label">${esc(s.label || '')}</span>` +
+      `<span class="sw-route__n">${pad(i + 1)}</span><i></i>`;
     dot.addEventListener('click', () => jumpTo(i)); route.appendChild(dot); dots.push(dot);
 
-    if (config.nav !== false) {
-      const b = el('button', 'sw-nav__item'); b.textContent = s.label || '';
+    if (navMode) {
+      const b = el('button', 'sw-nav__item');
+      b.innerHTML = `<span class="sw-nav__n">${pad(i + 1)}</span>` +
+        `<span class="sw-nav__t">${esc(s.label || '')}</span>`;
       b.addEventListener('click', () => jumpTo(i)); nav.appendChild(b);
     }
   });
@@ -542,10 +578,37 @@ function injectCSS() {
   .sw-topbar{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:clamp(14px,2.4vw,26px) clamp(18px,5vw,64px);}
   .sw-brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--sw-ink);}
   .sw-brand__mark{width:24px;height:28px;border-radius:7px 7px 10px 10px;background:linear-gradient(160deg,var(--sw-accent),color-mix(in srgb,var(--sw-accent) 60%,#000));box-shadow:0 6px 14px color-mix(in srgb,var(--sw-accent) 40%,transparent);}
+  /* A build-supplied mark renders as-is — no generic pill behind it. */
+  .sw-brand__mark--custom{width:auto;height:auto;border-radius:0;background:none;box-shadow:none;display:flex;align-items:center;}
+  .sw-brand__mark--custom svg,.sw-brand__mark--custom img{display:block;height:clamp(22px,2.2vw,30px);width:auto;}
   .sw-brand__name{font-family:var(--sw-font-display);font-weight:700;font-size:1.1rem;}
-  .sw-nav{display:flex;gap:4px;padding:5px;background:color-mix(in srgb,#fff 55%,transparent);backdrop-filter:blur(10px);border:1px solid color-mix(in srgb,var(--sw-accent) 16%,transparent);border-radius:999px;}
-  .sw-nav__item{font:inherit;font-size:.82rem;color:var(--sw-ink-soft);border:0;background:transparent;cursor:pointer;padding:7px 14px;border-radius:999px;transition:color .25s,background .25s;}
-  .sw-nav__item:hover{color:var(--sw-ink);} .sw-nav__item.is-active{color:#fff;background:var(--sw-accent);}
+  .sw-topbar--navcenter{justify-content:space-between;}
+  .sw-topbar--navcenter .sw-nav{position:absolute;left:50%;transform:translateX(-50%);}
+  /* A 6-chapter nav with long labels must never grow into the brand or off the edge:
+     cap it and let it scroll rather than overlap. */
+  .sw-nav{display:flex;align-items:center;gap:4px;max-width:min(52vw,660px);overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;}
+  .sw-nav::-webkit-scrollbar{display:none;}
+  .sw-nav__item{flex:0 0 auto;}
+  /* Centred nav is absolutely positioned, so it can't be squeezed — hide it where the
+     brand and the top CTA would reach it instead of letting them collide. */
+  @media (max-width:1100px){ .sw-topbar--navcenter .sw-nav{display:none;} }
+  .sw-nav__item{font:inherit;font-size:.82rem;color:var(--sw-ink-soft);border:0;background:transparent;cursor:pointer;padding:7px 14px;border-radius:999px;transition:color .25s,background .25s;display:flex;align-items:center;gap:7px;}
+  .sw-nav__item:hover{color:var(--sw-ink);}
+  .sw-nav__n{display:none;font-family:ui-monospace,Menlo,monospace;font-size:.72rem;letter-spacing:.08em;opacity:.7;}
+  /* pills — the container chip row */
+  .sw-nav--pills{gap:4px;padding:5px;background:color-mix(in srgb,var(--sw-bg) 45%,transparent);backdrop-filter:blur(10px);border:1px solid color-mix(in srgb,var(--sw-accent) 16%,transparent);border-radius:999px;}
+  .sw-nav--pills .sw-nav__item.is-active{color:var(--sw-bg);background:var(--sw-accent);}
+  /* plain — type only, an underline marks the active chapter */
+  .sw-nav--plain{gap:clamp(14px,2vw,30px);}
+  .sw-nav--plain .sw-nav__item{padding:6px 0;border-radius:0;border-bottom:1.5px solid transparent;letter-spacing:.02em;}
+  .sw-nav--plain .sw-nav__item.is-active{color:var(--sw-ink);border-bottom-color:var(--sw-accent);}
+  /* numbers — an index rail, for films whose chapter titles are long */
+  .sw-nav--numbers{gap:clamp(10px,1.6vw,22px);}
+  .sw-nav--numbers .sw-nav__n{display:block;}
+  .sw-nav--numbers .sw-nav__t{display:none;}
+  .sw-nav--numbers .sw-nav__item{padding:6px 2px;border-radius:0;}
+  .sw-nav--numbers .sw-nav__item.is-active{color:var(--sw-accent);}
+  .sw-nav--numbers .sw-nav__item.is-active .sw-nav__t{display:block;font-size:.78rem;}
   .sw-topcta{text-decoration:none;font-weight:600;font-size:.9rem;color:#fff;background:var(--sw-ink);padding:10px 20px;border-radius:999px;white-space:nowrap;}
   .sw-stage{position:fixed;inset:0;z-index:10;pointer-events:none;}
   .sw-scene{position:absolute;inset:0;opacity:0;overflow:hidden;will-change:opacity;}
@@ -570,8 +633,42 @@ function injectCSS() {
   .sw-route__dot i{width:9px;height:9px;border-radius:50%;background:color-mix(in srgb,var(--sw-accent) 40%,transparent);transition:transform .3s,background .3s,box-shadow .3s;}
   .sw-route__dot:hover i{transform:scale(1.25);background:var(--sw-accent);}
   .sw-route__dot.is-active i{background:var(--sw-accent);transform:scale(1.4);box-shadow:0 0 0 5px color-mix(in srgb,var(--sw-accent) 22%,transparent);}
-  .sw-route__label{position:absolute;right:24px;top:50%;transform:translateY(-50%) translateX(6px);white-space:nowrap;font-size:.78rem;font-weight:600;color:var(--sw-ink);background:color-mix(in srgb,#fff 85%,transparent);backdrop-filter:blur(6px);padding:5px 11px;border-radius:999px;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;border:1px solid color-mix(in srgb,var(--sw-accent) 14%,transparent);}
+  /* The chip is drawn from the film palette, not from #fff: on a light look a white
+     chip put white ink on white and the label vanished. --sw-bg/--sw-ink always
+     contrast with each other, whatever the look is. */
+  .sw-route__label{position:absolute;right:24px;top:50%;transform:translateY(-50%) translateX(6px);white-space:nowrap;font-size:.78rem;font-weight:600;color:var(--sw-ink);background:color-mix(in srgb,var(--sw-bg) 88%,transparent);backdrop-filter:blur(6px);padding:5px 11px;border-radius:999px;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;border:1px solid color-mix(in srgb,var(--sw-accent) 22%,transparent);}
   .sw-route__dot:hover .sw-route__label,.sw-route__dot.is-active .sw-route__label{opacity:1;transform:translateY(-50%) translateX(0);}
+  .sw-route__n{display:none;font-family:ui-monospace,Menlo,monospace;font-size:.7rem;letter-spacing:.06em;color:var(--sw-ink-soft);}
+  /* --- rail variants. Same behaviour, different instrument. --- */
+  /* bars — a ladder of ticks; reads as film footage counter rather than a slideshow */
+  .sw-route--bars{gap:10px;}
+  .sw-route--bars::before{display:none;}
+  .sw-route--bars .sw-route__dot{width:26px;height:14px;}
+  .sw-route--bars .sw-route__dot i{width:22px;height:2px;border-radius:1px;}
+  .sw-route--bars .sw-route__dot.is-active i{transform:scaleX(1);width:26px;height:3px;box-shadow:none;}
+  /* numbers — index only, no dot */
+  .sw-route--numbers{gap:14px;}
+  .sw-route--numbers::before{display:none;}
+  .sw-route--numbers .sw-route__dot{width:auto;height:auto;padding:2px 4px;}
+  .sw-route--numbers .sw-route__dot i{display:none;}
+  .sw-route--numbers .sw-route__n{display:block;transition:color .3s;}
+  .sw-route--numbers .sw-route__dot.is-active .sw-route__n{color:var(--sw-accent);}
+  /* labels — the chapter list stands open; no hover needed, nothing to discover */
+  .sw-route--labels{gap:12px;align-items:flex-end;}
+  .sw-route--labels::before{display:none;}
+  .sw-route--labels .sw-route__dot{width:auto;height:auto;justify-items:end;}
+  .sw-route--labels .sw-route__dot i{display:none;}
+  .sw-route--labels .sw-route__label{position:static;transform:none;opacity:.45;background:none;border:0;backdrop-filter:none;padding:2px 0;font-weight:500;color:var(--sw-ink);text-shadow:0 1px 10px var(--sw-bg);}
+  .sw-route--labels .sw-route__dot:hover .sw-route__label{opacity:.8;transform:none;}
+  .sw-route--labels .sw-route__dot.is-active .sw-route__label{opacity:1;transform:none;color:var(--sw-accent);font-weight:700;}
+  /* left side */
+  .sw-route--left{right:auto;left:clamp(14px,2.4vw,30px);}
+  .sw-route--left .sw-route__label{right:auto;left:24px;transform:translateY(-50%) translateX(-6px);}
+  .sw-route--left .sw-route__dot:hover .sw-route__label,
+  .sw-route--left .sw-route__dot.is-active .sw-route__label{transform:translateY(-50%) translateX(0);}
+  .sw-route--left.sw-route--labels{align-items:flex-start;}
+  .sw-route--left.sw-route--labels .sw-route__dot{justify-items:start;}
+  .sw-route--left.sw-route--labels .sw-route__label{left:auto;transform:none;}
   .sw-hint{position:fixed;left:50%;bottom:26px;z-index:30;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;color:var(--sw-ink-soft);transition:opacity .3s;}
   .sw-hint i{width:22px;height:34px;border-radius:12px;border:2px solid color-mix(in srgb,var(--sw-ink) 28%,transparent);position:relative;}
   .sw-hint i::after{content:"";position:absolute;left:50%;top:7px;width:4px;height:7px;border-radius:2px;background:var(--sw-accent);transform:translateX(-50%);animation:sw-wheel 1.7s ease-in-out infinite;}
@@ -587,7 +684,10 @@ function injectCSS() {
     .sw-copy__title{font-size:clamp(1.9rem,7.5vw,2.7rem);}
     .sw-copy__body{max-width:none;font-size:clamp(.98rem,3.6vw,1.1rem);} .sw-scene__video,.sw-scene__still{object-position:center 46%;}
     .sw-hint{bottom:calc(20px + env(safe-area-inset-bottom));}
-    .sw-route{gap:16px;right:6px;} .sw-route__label{display:none;}
+    .sw-route{gap:16px;right:6px;} .sw-route--left{left:6px;right:auto;} .sw-route__label{display:none;}
+    /* the labels variant has nothing left once labels are hidden — collapse it to ticks */
+    .sw-route--labels .sw-route__dot i{display:block;}
+    .sw-route--labels{align-items:center;} .sw-route--labels .sw-route__dot{width:28px;height:28px;justify-items:center;}
   }
   /* Portrait phones crop a 16:9 clip hard; keep the framing centred so the focal
      subject (which the camera dives toward) stays in view. */

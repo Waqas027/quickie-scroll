@@ -126,12 +126,20 @@ import QuickieScroll from '@/components/QuickieScroll';
 import type { QSConfig } from '@/components/quickie-scroll';
 
 const config: QSConfig = {
-  brand: { name: 'MERIDIAN', href: '#top' },
+  // Chrome — five decisions made for THIS build, not inherited. See chrome.md.
+  brand: {
+    name: 'MERIDIAN', href: '#top',
+    mark: '<svg viewBox="0 0 28 28" fill="none" aria-hidden="true">' +
+          '<path d="M14 3v22M6 9l8-6 8 6" stroke="currentColor" stroke-width="1.4"/></svg>',
+  },
+  nav: 'plain', navPlace: 'center',
+  route: 'bars', routeSide: 'left',
   hint: 'scroll to descend',
   diveScroll: 1.4,
   crossfade: 0.08,
   connectors: [],
-  hud: { system: 'MERIDIAN / NIGHT ARRIVAL', verb: 'scroll to descend', frames: true },
+  // hud.system is instrumentation, never the brand name — it prints under the wordmark.
+  hud: { system: '01 — NIGHT ARRIVAL', verb: 'scroll to descend', frames: true },
   sections: [
     {
       id: 'threshold', label: 'The Threshold',

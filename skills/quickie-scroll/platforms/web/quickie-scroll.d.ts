@@ -57,10 +57,24 @@ export interface QSFooter {
 }
 
 export interface QSConfig {
-  brand?: { name: string; href?: string };
+  brand?: {
+    name?: string;
+    href?: string;
+    /**
+     * The brand mark. A raw SVG/HTML string renders as-is; `false` ships a wordmark
+     * only; omitting it falls back to the generic accent pill — the one shape that
+     * makes two builds look like the same site. Design it: platforms/web/chrome.md.
+     */
+    mark?: string | false;
+  };
   cta?: { label: string; href?: string };
   hint?: string;
-  nav?: boolean;
+  /** Top chapter nav. `true` === 'pills'. Chosen per build, not defaulted. */
+  nav?: boolean | 'pills' | 'plain' | 'numbers';
+  navPlace?: 'right' | 'center';
+  /** Scroll-progress indicator. Chosen per build; `false` when the film reads better bare. */
+  route?: false | 'dots' | 'bars' | 'numbers' | 'labels';
+  routeSide?: 'right' | 'left';
   atmosphere?: boolean;
   /** Viewport-heights per chapter clip (per-chapter `scroll` overrides it). */
   diveScroll?: number;

@@ -9,12 +9,17 @@ description: >
   film — it acts as creative director and designs four or five premium, concept-specific
   sections plus a mandatory context-aware footer from the subject, the look and the
   references, so the film evolves into a complete, domain-native site rather than being
-  followed by a generic landing page. Treats the film as the emotional opening, then builds
+  followed by a generic landing page. Designs the chrome per build too — the brand mark, the
+  nav pattern and position, the scroll-progress rail and its side are decided from the
+  subject and the look rather than inherited, so two builds never open as the same site with
+  different text. Treats the film as the emotional opening, then builds
   the actual product journey: discovery, comparison, itinerary or basket building,
   conversion and operational detail when those belong to the subject. Sources the real
   imagery that those sections need from the web when the user has not supplied it, records
   provenance and license/use status, and never fills a page with invented businesses,
-  destinations, products, prices or reviews. Uses the UI/UX Pro Max skill when it is
+  destinations, products, prices or reviews. When an image genuinely cannot be sourced it
+  writes a full asset specification — section, exact position, local path, aspect ratio and
+  generation prompt — instead of quietly dropping a gradient where a photograph belongs. Uses the UI/UX Pro Max skill when it is
   available to establish the interaction and accessibility system before implementation.
   Generates exactly one start image —
   every later scene is conditioned on the previous clip's actual last frame — and writes
@@ -177,11 +182,19 @@ the film's **real last frame** and confirm the post-film plan drafted at Step 1 
 subject, the first one inheriting the last frame's palette, light and motion direction.
 Never the default statement → cards → testimonials → CTA. → [`sections/post-film.md`](sections/post-film.md)
 
+Design the **chrome** in the same pass — the brand mark, the nav pattern and position, the
+scroll-progress rail and its side, and chapter 1's alignment. Five decisions, made from the
+subject and the look, recorded in `README.md`. The engine's defaults are what made two
+unrelated builds read as one product with two skins; shipping them unexamined is the failure
+this step exists to prevent. → [`platforms/web/chrome.md`](platforms/web/chrome.md)
+
 Then build:
 
 - **Web** — scaffold a **Next.js App Router project**, not a single HTML file. Engine,
   wrapper, types, Lenis smooth scroll and the two hard rules:
-  [`platforms/web/nextjs.md`](platforms/web/nextjs.md). Engine config — chapters, `hud`,
+  [`platforms/web/nextjs.md`](platforms/web/nextjs.md). Chrome variants — `brand.mark`,
+  `nav`, `navPlace`, `route`, `routeSide`:
+  [`platforms/web/chrome.md`](platforms/web/chrome.md). Engine config — chapters, `hud`,
   `align`, post-film sections, `scroll`/`linger` pacing:
   [`platforms/web/engine-config.md`](platforms/web/engine-config.md).
 - **App** — per the Step 0 probe: [`platforms/flutter/flutter.md`](platforms/flutter/flutter.md)
@@ -220,7 +233,9 @@ Where to change what. One domain, one folder, one source of truth.
 | Writing clip *n* from clip *n−1*; connector prompts | `video/continuity.md` |
 | Renderer choice, cost, spend approval | `video/rendering.md` |
 | The page after the film — how it is designed | `sections/post-film.md` |
+| The logo, the nav pattern, the progress rail — chrome designed per build | `platforms/web/chrome.md` |
 | Finding, licensing, downloading and attributing section imagery | `assets/sourcing.md` |
+| What to write when an image can't be sourced, instead of a gradient | `assets/sourcing.md` → *asset prompts* |
 | Next.js scaffold, React wrapper, engine config | `platforms/web/` |
 | The Flutter or Android app target | `platforms/flutter/`, `platforms/android/` |
 | The scrub engine itself | `engine/quickie-scroll.js` |
@@ -247,3 +262,7 @@ Where to change what. One domain, one folder, one source of truth.
   Prints `TARGET=FLUTTER|ANDROID|BOTH|NONE`.
 - [`tools/knockout.py`](tools/knockout.py) — background knockout, for floating diorama
   scenes.
+
+Not copied into a build, but run it after any engine edit:
+[`engine/chrome-variants.test.mjs`](engine/chrome-variants.test.mjs) — `node
+engine/chrome-variants.test.mjs`, no install, asserts every chrome variant still builds.

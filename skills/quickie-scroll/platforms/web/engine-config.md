@@ -9,7 +9,15 @@
 
 ---
 
-Beyond the chain and the copy, four things carry the cinematic feel.
+Beyond the chain and the copy, five things carry the cinematic feel.
+
+## The chrome knobs — `brand.mark`, `nav`, `navPlace`, `route`, `routeSide`
+
+The header mark, the chapter nav and the scroll-progress rail. Each has variants, and each is
+**chosen per build** from the subject and the look — the defaults (`pill mark + pills + right
++ dots + right`) are what made two unrelated builds read as the same site. Variants, how to
+pick, and the README block that records the choice:
+[`chrome.md`](chrome.md) and [`core/rules.md`](../../core/rules.md) §19.
 
 ## `hud` — the corner instrumentation
 
@@ -17,6 +25,10 @@ System label, live `FRAME nnn` counter, registration brackets, scroll verb. Ever
 film wears some version of it; it is what makes a full-bleed clip read as a *film* rather
 than a background video. Wording comes from the look
 ([`art-direction/looks.md`](../../art-direction/looks.md)).
+
+`hud.system` sits directly under the brand lockup — **never set it to the brand name**, or
+the name prints twice, 44px apart, and reads as a bug. Instrumentation, not branding:
+[`chrome.md`](chrome.md).
 
 ## `align` per chapter
 

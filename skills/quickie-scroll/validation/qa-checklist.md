@@ -33,6 +33,34 @@
 
 ---
 
+## The chrome
+
+*The header and the progress rail, judged against [`platforms/web/chrome.md`](../platforms/web/chrome.md).
+This is the section that catches "every site we build looks the same".*
+
+- **`README.md` has a Chrome block** naming all five decisions and chapter 1's `align`, each
+  with a reason. No block = the chrome was inherited, not designed.
+- **The brand mark is this brand's.** A designed inline SVG, the user's real logo, or a
+  deliberate wordmark-only. **The default accent pill (`.sw-brand__mark` with no
+  `--custom`) is a fail** unless the README says why it is right here.
+- **`hud.system` does not repeat the brand name.** Read the top-left corner: the name must
+  appear once.
+- **The combination differs from the last build's.** `pills + right + dots + right` on a
+  second consecutive build is a fail.
+- **Nothing in the top bar collides or clips.** At 1440px and 1024px: brand, nav and top CTA
+  each fully visible, none overlapping the HUD frame counter, none running off the edge.
+- **The progress rail is readable.** Hover and active states legible against the *brightest*
+  frame of the film, not just the first one — screenshot the active label over the brightest
+  chapter and look at it. A washed-out chip nobody can read is the bug this replaced.
+- **The rail tracks and navigates.** Scroll through every chapter: the active marker updates
+  each time, and clicking any marker jumps to that chapter.
+- **The rail is not on top of the copy.** If chapters use `align:'right'`, the rail is on the
+  left, or off.
+- **Phone (≈390px):** nav hidden, rail collapsed to ticks with a ≥28px touch target, nothing
+  overlapping the chapter copy.
+
+---
+
 ## The post-film page
 
 Judged as part of the same piece as the film, not as a website appended to one.
@@ -74,6 +102,13 @@ Judged as part of the same piece as the film, not as a website appended to one.
   live; demo data labelled in the page and in `README.md`.
 - Every adopted web image has a source, creator/owner, license/use status and local filename
   recorded in `assets/SOURCES.md`; no arbitrary hotlinks or unverified search thumbnails.
+- **No gradient, solid fill, CSS illustration or empty box sits where a photograph belongs.**
+  Walk every image slot: either a real image loads, or a labelled stand-in reserves the exact
+  space *and* `assets/asset-prompts/<name>.md` exists for it.
+- Every spec names its section, its position within the section, the local path the page
+  already references, the aspect ratio and a full generation prompt — enough to generate and
+  drop in without touching the layout.
+- Pending assets are listed in `README.md` and were named to the user at handover.
 - The primary action works with keyboard and touch, including visible focus states and an
   understandable empty/demo state for interactive modules.
 

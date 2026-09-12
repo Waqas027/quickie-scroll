@@ -27,6 +27,12 @@ who came here to avoid making it.
   the footer.
 - **Never the default four.** Statement → cards → testimonials → CTA is the shape this
   module exists to prevent. If a plan comes out looking like that, it was not designed.
+- **Vary at the layout level, not only the content level.** Two builds may legitimately both
+  need a product showcase — they must not both render it as a three-column card grid. The
+  composition, column structure, image-to-text relationship, section width, alignment,
+  background treatment and reveal are design decisions per build, and the same combination
+  twice running is the template this module exists to prevent. The chrome above the fold
+  follows the same law: [`platforms/web/chrome.md`](../platforms/web/chrome.md).
 
 The engine array is still called `acts` — that is the wire format, not the concept. Don't
 rename it; the config key, the CSS classes and the `.d.ts` all depend on it.
@@ -254,8 +260,17 @@ Use the source and provenance process in [`assets/sourcing.md`](../assets/sourci
 Never use an arbitrary image-search result without checking its actual asset page and
 permitted use.
 
-If a section can only exist by inventing facts, that section was the wrong choice. Go back
-to Step E and pick a better one.
+**A section designed around photography never degrades into gradients.** If a product card,
+a destination tile or an editorial image cannot be sourced, the section keeps its layout and
+the slot ships a labelled, correctly-proportioned stand-in plus an asset specification in
+`assets/asset-prompts/` — section, exact position, local path, aspect ratio, full generation
+prompt. Six product cards means six real images or six specs, never six coloured rectangles.
+→ [`assets/sourcing.md`](../assets/sourcing.md) → *When no image can be sourced*, and
+[`core/rules.md`](../core/rules.md) §18.
+
+If a section can only exist by inventing **facts** — a hotel that doesn't exist, a price
+nobody set — that section was the wrong choice. Go back to Step E and pick a better one. A
+missing *image* is not that case; it is a spec.
 
 ---
 

@@ -30,6 +30,19 @@ up over the last frame.
 | After the film | <the 4–5 section names, in order, + footer> |
 | Asset source | <manual — the prompt pack is the deliverable | automatic via `<tool>`> |
 
+## Chrome
+
+<!-- All five, each with its reason. No block here means the chrome was inherited, not
+     designed — see platforms/web/chrome.md. -->
+
+| | Choice | Why for this build |
+|---|---|---|
+| Mark | <inline SVG / user logo / wordmark only> | <what it says about this brand> |
+| Nav | <pills / plain / numbers / none>, <right / centre> | <why> |
+| Rail | <dots / bars / numbers / labels / none>, <right / left> | <why> |
+| HUD | system `<…>`, frames <on/off>, brackets <on/off> | <why — and never the brand name> |
+| Chapter 1 | `align: <left/right/centre>` | <where the start frame carries the copy> |
+
 ## The journey
 
 | # | Chapter | What the camera does | Headline |
@@ -55,6 +68,16 @@ motion direction.>
 
 <!-- only when a section uses material the user didn't supply -->
 **Sourced material:** <what was sourced, from where, and anything labelled as sample data.>
+
+<!-- only when an image could not be sourced — one line per spec in assets/asset-prompts/ -->
+### Assets pending
+
+These slots ship a labelled stand-in and a written specification. Generate each image, save
+it to the path shown, and the page is complete — no markup changes.
+
+| Spec | Lands at | Section / position |
+|---|---|---|
+| `assets/asset-prompts/<name>.md` | `public/assets/<…>` | <section> — <position> |
 
 <!-- only when the user supplied references -->
 ## References

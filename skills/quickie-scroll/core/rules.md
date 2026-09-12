@@ -186,3 +186,32 @@ of every clip still resolves into the stable handoff required by rule 1.
 
 Procedure: [`video/prompting.md`](../video/prompting.md) and
 [`animation/scene-planning.md`](../animation/scene-planning.md).
+
+
+## 18. A gradient is never a substitute for a required photograph
+
+If a section was designed around real imagery, it ships with real imagery or with a labelled,
+correctly-proportioned stand-in plus a written asset specification in
+`assets/asset-prompts/`. A gradient, solid fill, CSS illustration or empty box quietly put
+where a photograph belongs is a broken section.
+
+The spec records the section, the exact position within it, the local path the page already
+references, the aspect ratio and a complete generation prompt — so the image can be generated
+later and dropped in without touching the layout. Every pending spec is listed in `README.md`
+and named to the user at handover.
+
+Procedure: [`assets/sourcing.md`](../assets/sourcing.md) → *When no image can be sourced*.
+
+## 19. The chrome is designed per build, never inherited
+
+The brand mark, the top nav, its position, the scroll-progress rail and the rail's side are
+five decisions the build makes from the subject and the look — not five defaults it accepts.
+Shipping the engine's defaults is what made a peach drink and an arctic travel brand read as
+one product with two skins.
+
+Choose and record all five in `README.md`, plus chapter 1's `align`. The engine's generic
+accent-pill mark is a fallback, not a logo: design an inline SVG lockup, use the user's real
+logo, or ship a wordmark alone. And `hud.system` never repeats the brand name — it is
+instrumentation, not branding.
+
+Procedure and the variants: [`platforms/web/chrome.md`](../platforms/web/chrome.md).
